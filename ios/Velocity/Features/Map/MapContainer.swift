@@ -35,6 +35,7 @@ struct MapContainer: UIViewRepresentable {
     var focusTick: Int = 0
     var drawMode: Bool = false
     var drawPoints: [CLLocationCoordinate2D] = []
+    var fitRoute: Bool = false
     var onSelect: (MapSelection) -> Void = { _ in }
     var onRegion: (MKBox) -> Void = { _ in }
     var onTapCoordinate: (CLLocationCoordinate2D) -> Void = { _ in }
@@ -76,6 +77,18 @@ struct MapContainer: UIViewRepresentable {
             c.lastFocus = focusTick
             map.setCenter(focus, zoomLevel: 15, animated: true)
         }
+        if fitRoute, route.count >= 2, c.lastFitCount != route.count {
+            c.lastFitCount = route.count
+            var minLat = 90.0, minLon = 180.0, maxLat = -90.0, maxLon = -180.0
+            for co in route {
+                minLat = min(minLat, co.latitude); maxLat = max(maxLat, co.latitude)
+                minLon = min(minLon, co.longitude); maxLon = max(maxLon, co.longitude)
+            }
+            let bounds = MLNCoordinateBounds(
+                sw: CLLocationCoordinate2D(latitude: minLat, longitude: minLon),
+                ne: CLLocationCoordinate2D(latitude: maxLat, longitude: maxLon))
+            map.setVisibleCoordinateBounds(bounds, edgePadding: UIEdgeInsets(top: 34, left: 34, bottom: 34, right: 34), animated: false)
+        }
     }
 
     final class Coordinator: NSObject, MLNMapViewDelegate {
@@ -83,6 +96,7 @@ struct MapContainer: UIViewRepresentable {
         weak var mapView: MLNMapView?
         var lastRecenter = 0
         var lastFocus = 0
+        var lastFitCount = -1
         var lastDark = false
         var triedFallback = false
         var usingOffline = false

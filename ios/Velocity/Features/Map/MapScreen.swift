@@ -39,19 +39,24 @@ struct MapScreen: View {
     @Environment(AppState.self) private var app
     @Environment(\.colorScheme) private var scheme
     @State private var vm = MapVM()
+    @State private var loc = LocationProvider()
+    @State private var centeredOnMe = false
 
     var body: some View {
         @Bindable var vm = vm
         ZStack(alignment: .top) {
             MapContainer(
                 segments: vm.segments, pois: vm.pois, reports: vm.reports,
-                route: [], me: MapDefaults.center, toggles: vm.toggles,
+                route: [], me: loc.coordinate ?? MapDefaults.center, toggles: vm.toggles,
                 dark: scheme == .dark, recenterTick: vm.recenterTick,
                 focus: vm.focus, focusTick: vm.focusTick,
                 onSelect: { vm.selection = $0 },
                 onRegion: { vm.load($0) }
             )
             .ignoresSafeArea()
+            .onChange(of: loc.coordinate?.latitude) { _, lat in
+                if lat != nil && !centeredOnMe { centeredOnMe = true; vm.recenterTick += 1 }
+            }
 
             FogOfWar().allowsHitTesting(false)
 
@@ -90,6 +95,7 @@ struct MapScreen: View {
             }
         }
         .task {
+            loc.start()
             vm.reloadCurrent()
             if let ca = app.cardArg {
                 try? await Task.sleep(nanoseconds: 1_100_000_000)

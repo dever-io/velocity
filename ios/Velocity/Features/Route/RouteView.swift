@@ -4,6 +4,7 @@ import CoreLocation
 struct RouteView: View {
     @Environment(AppState.self) private var app
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.colorScheme) private var scheme
 
     @State private var profile = "city"
     @State private var result: RouteResult?
@@ -37,6 +38,7 @@ struct RouteView: View {
             .padding(16)
         }
         .background(ScreenBackground())
+        .onAppear { if CommandLine.arguments.contains("-autoroute") { build() } }
     }
 
     private var endpointsCard: some View {
@@ -102,6 +104,12 @@ struct RouteView: View {
     private func builtResult(_ r: RouteResult) -> some View {
         let loc = app.loc
         return VStack(spacing: 16) {
+            MapContainer(segments: [], pois: [], reports: [], route: r.coords, me: nil,
+                         toggles: LayerToggles(infra: false, mtb: false, poi: false, reports: false),
+                         dark: scheme == .dark, recenterTick: 0, fitRoute: true)
+                .frame(height: 190)
+                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                .allowsHitTesting(false)
             HStack(spacing: 10) {
                 StatTile(value: String(format: "%.1f", Double(r.distance) / 1000), label: "км", color: Theme.tint)
                 StatTile(value: "\(Int((Double(r.duration) / 60).rounded()))", label: "мин", color: Theme.green)
