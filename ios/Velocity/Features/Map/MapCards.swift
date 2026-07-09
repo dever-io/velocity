@@ -41,6 +41,7 @@ struct SegmentCard: View {
     @Environment(AppState.self) private var app
     @Environment(\.dismiss) private var dismiss
     let seg: SegmentFeature
+    @State private var showEdit = false
 
     var body: some View {
         let loc = app.loc
@@ -61,13 +62,101 @@ struct SegmentCard: View {
             InfoRow(label: loc.s("source"), value: p.source == "community" ? loc.s("srcCom") : loc.s("srcOsm")); Divider()
             InfoRow(label: loc.s("updated"), value: shortDate(p.updatedAt))
             Spacer(minLength: 12)
-            PrimaryButton(title: loc.s("reportHere"), color: Theme.red, icon: "exclamationmark.triangle.fill") {
-                dismiss()
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { app.cover = .report }
+            HStack(spacing: 10) {
+                PrimaryButton(title: loc.s("reportHere"), color: Theme.red, icon: "exclamationmark.triangle.fill") {
+                    dismiss()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { app.cover = .report }
+                }
+                Button { showEdit = true } label: {
+                    Image(systemName: "square.and.pencil").font(.system(size: 18, weight: .semibold)).foregroundStyle(Theme.tint)
+                        .frame(width: 52, height: 52).background(Theme.card2, in: RoundedRectangle(cornerRadius: Radius.button, style: .continuous))
+                }
             }
         }
         .padding(.horizontal, 20).padding(.bottom, 20)
         .presentationBackground(Theme.bg)
+        .sheet(isPresented: $showEdit) { SegmentEditSheet(seg: seg, onDone: { dismiss() }) }
+    }
+}
+
+// EDIT-2: correct a segment (type / surface / removed) → modify_segment proposal.
+struct SegmentEditSheet: View {
+    @Environment(AppState.self) private var app
+    @Environment(\.dismiss) private var dismiss
+    let seg: SegmentFeature
+    var onDone: () -> Void = {}
+    @State private var kind: String
+    @State private var surface: String
+    @State private var removed = false
+    @State private var busy = false
+
+    private let kinds = ["prot", "lane", "shared", "mtb", "other"]
+    private let surfaces = ["asphalt", "ground", "gravel", "unknown"]
+
+    init(seg: SegmentFeature, onDone: @escaping () -> Void = {}) {
+        self.seg = seg
+        self.onDone = onDone
+        _kind = State(initialValue: seg.properties.kind)
+        _surface = State(initialValue: seg.properties.surface)
+    }
+
+    var body: some View {
+        let loc = app.loc
+        VStack(alignment: .leading, spacing: 0) {
+            CardHeaderGrabber()
+            Text(loc.s("editSegment")).font(.system(size: 22, weight: .heavy)).foregroundStyle(Theme.tx).padding(.vertical, 10)
+            ScrollView {
+                VStack(alignment: .leading, spacing: 14) {
+                    Text(loc.s("drawKindL")).font(.system(size: 14, weight: .semibold)).foregroundStyle(Theme.tx2)
+                    ForEach(kinds, id: \.self) { k in
+                        Button { kind = k; removed = false } label: {
+                            HStack(spacing: 12) {
+                                Capsule().fill(Theme.infraColor(k)).frame(width: 26, height: 6)
+                                Text(loc.kind(k)).font(.system(size: 15)).foregroundStyle(Theme.tx)
+                                Spacer()
+                                if kind == k && !removed { Image(systemName: "checkmark").font(.system(size: 14, weight: .bold)).foregroundStyle(Theme.infraColor(k)) }
+                            }
+                            .padding(.horizontal, 14).frame(height: 46)
+                            .background(Theme.card, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                            .overlay(RoundedRectangle(cornerRadius: 12).stroke(kind == k && !removed ? Theme.infraColor(k) : Theme.sep, lineWidth: kind == k && !removed ? 2 : 1))
+                        }.buttonStyle(PressStyle())
+                    }
+                    Text(loc.s("drawSurfaceL")).font(.system(size: 14, weight: .semibold)).foregroundStyle(Theme.tx2).padding(.top, 4)
+                    HStack(spacing: 8) {
+                        ForEach(surfaces, id: \.self) { s in
+                            Button { surface = s } label: {
+                                Text(loc.surf(s)).font(.system(size: 13, weight: .semibold))
+                                    .foregroundStyle(surface == s ? .white : Theme.tx)
+                                    .padding(.horizontal, 12).frame(height: 34)
+                                    .background(surface == s ? Theme.tint : Theme.card, in: Capsule())
+                                    .overlay(Capsule().stroke(Theme.sep, lineWidth: surface == s ? 0 : 1))
+                            }
+                        }
+                    }
+                    Toggle(isOn: $removed) { Text(loc.s("segRemoved")).font(.system(size: 15)).foregroundStyle(Theme.tx) }
+                        .tint(Theme.red).padding(.top, 6)
+                }
+                .padding(.bottom, 8)
+            }
+            PrimaryButton(title: loc.s("drawSubmit"), color: Theme.green, enabled: !busy) { submit() }
+        }
+        .padding(.horizontal, 20).padding(.bottom, 20)
+        .presentationDetents([.large])
+        .presentationBackground(Theme.bg)
+    }
+
+    private func submit() {
+        busy = true
+        var payload: [String: Any] = ["targetId": seg.id ?? ""]
+        if removed { payload["removed"] = true } else { payload["kind"] = kind; payload["surface"] = surface }
+        Task {
+            let resp = try? await APIClient.shared.createEdit(type: "modify_segment", geometry: nil, payload: payload, photoKeys: [])
+            dismiss()
+            onDone()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                app.handleReward(resp?.reward, toast: app.loc.s("editSuccess"))
+            }
+        }
     }
 }
 

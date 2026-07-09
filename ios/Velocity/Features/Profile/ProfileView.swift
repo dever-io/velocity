@@ -21,6 +21,7 @@ struct ProfileView: View {
     @Environment(AppState.self) private var app
     @State private var vm = ProfileVM()
     @State private var selectedBadge: Badge?
+    @State private var editingProfile = false
 
     var body: some View {
         @Bindable var app = app
@@ -47,11 +48,15 @@ struct ProfileView: View {
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
+                    Button { editingProfile = true } label: { Image(systemName: "square.and.pencil").foregroundStyle(Theme.tint) }
+                }
+                ToolbarItem(placement: .topBarTrailing) {
                     NavigationLink { SettingsView() } label: { Image(systemName: "gearshape.fill").foregroundStyle(Theme.tx2) }
                 }
             }
             .task { await vm.load() }
             .sheet(item: $selectedBadge) { b in BadgeDetailSheet(badge: b, loc: loc) }
+            .sheet(isPresented: $editingProfile) { EditProfileSheet() }
             .navigationDestination(item: $app.profilePush) { dest in
                 switch dest {
                 case .settings: SettingsView()
@@ -301,6 +306,53 @@ struct BadgeDetailSheet: View {
         .padding(.horizontal, 24)
         .presentationDetents([.height(340)])
         .presentationBackground(Theme.bg)
+    }
+}
+
+// ── Edit profile (ACC-3) ──────────────────────────────────────────────────────
+struct EditProfileSheet: View {
+    @Environment(AppState.self) private var app
+    @Environment(\.dismiss) private var dismiss
+    @State private var nickname = ""
+    @State private var busy = false
+
+    var body: some View {
+        let loc = app.loc
+        NavigationStack {
+            VStack(spacing: 22) {
+                Text((nickname.first.map { String($0).uppercased() }) ?? "V")
+                    .font(.system(size: 40, weight: .heavy)).foregroundStyle(.white)
+                    .frame(width: 96, height: 96).background(Theme.avatar, in: Circle())
+                    .padding(.top, 24)
+                TextField(loc.s("nickname"), text: $nickname)
+                    .font(.system(size: 17)).padding(14)
+                    .background(Theme.card, in: RoundedRectangle(cornerRadius: 13, style: .continuous))
+                Spacer()
+            }
+            .padding(16)
+            .background(ScreenBackground())
+            .navigationTitle(loc.s("editProfile"))
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) { Button(loc.s("cancel")) { dismiss() } }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(loc.s("save")) { save() }
+                        .disabled(nickname.trimmingCharacters(in: .whitespaces).isEmpty || busy)
+                }
+            }
+            .onAppear { nickname = app.me?.nickname ?? "" }
+        }
+    }
+
+    private func save() {
+        busy = true
+        let nn = nickname.trimmingCharacters(in: .whitespaces)
+        let letter = String(nn.first ?? "V").uppercased()
+        Task {
+            _ = try? await APIClient.shared.patchMe(["nickname": nn, "avatarLetter": letter])
+            await app.refreshMe()
+            dismiss()
+        }
     }
 }
 
