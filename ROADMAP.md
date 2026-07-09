@@ -5,14 +5,14 @@ The base app is a working MVP prototype; the items below are what's left to make
 real product **по спеке**.
 
 ## 1 · MVP completion — code, locally testable (start here)
-- ⬜ **Real device geolocation** (MAP-6): `CLLocationManager`, live "me" dot, recenter to me, compass heading. _(now: fixed point)_
-- ⬜ **Draw the built route on the map** (RTE-1/3): polyline + fit camera. _(now: only stats + elevation chart)_
+- ✅ **Real device geolocation** (MAP-6): `CLLocationManager`, live "me" dot, auto-center on first fix, recenter. _(compass heading captured, not yet drawn)_
+- ✅ **Draw the built route on the map** (RTE-1/3): polyline mini-map + fit camera.
+- ✅ **EDIT-2 UI** — correct a segment (type/surface / "removed") from the segment card → `modify_segment`.
+- ✅ **Profile edit** — nickname / avatar via `PATCH /me` (ACC-3).
+- ✅ **REP-3** — report expiry job (5-min interval) + `expires_at` filter in `/map/reports`.
+- ✅ **PTS-3** — daily XP cap (500) in `awardPoints` (verified: grants clamp to 0 past the cap).
 - ⬜ **A→B by tap/search in Route; open saved route from favorites** (RTE-1/5).
-- ⬜ **EDIT-2 UI** — correct a segment (type/surface / "removed") from the segment card. _(backend ready)_
 - ⬜ **EDIT-1** — drag/delete draw points; photo + comment in the draw flow.
-- ⬜ **Profile edit** — nickname / avatar (ACC-3). _(backend `PATCH /me` ready)_
-- ⬜ **REP-3** — report expiry job (cron) + filter by `expires_at`.
-- ⬜ **PTS-3** — daily point-grant limits (anti-abuse).
 - ⬜ Privacy hint on report ("не создавай отчёт у дома", §12); finish analytics events (§11); POI clustering (MAP-4).
 - ⬜ **Accessibility** — Dynamic Type + VoiceOver labels (§11).
 
