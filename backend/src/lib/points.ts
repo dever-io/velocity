@@ -1,3 +1,5 @@
+import { config } from "../config.js";
+
 // XP → level curve. req(L) = XP to go from level L to L+1 = 100 + (L-1)*20.
 // total(L) = XP needed to *reach* level L = 10(L-1)^2 + 90(L-1).
 //   total(7) = 900, total(8) = 1120  → matches the design mock (level 7, "60 XP to lvl 8").
@@ -45,7 +47,8 @@ interface Queryable {
   query: (text: string, params?: any[]) => Promise<{ rows: any[] }>;
 }
 
-/** Insert a ledger row, bump users.points, and report any level change. */
+/** Insert a ledger row, bump users.points, and report any level change.
+ *  PTS-3: positive grants are clamped so a user can't earn more than the daily cap. */
 export async function awardPoints(
   db: Queryable,
   userId: string,
@@ -56,16 +59,32 @@ export async function awardPoints(
 ): Promise<AwardResult> {
   const before = await db.query("select points from users where id = $1", [userId]);
   const prevXp: number = before.rows[0]?.points ?? 0;
+  const prevLevel = levelInfo(prevXp).level;
+
+  let grant = delta;
+  if (delta > 0) {
+    const usedRes = await db.query(
+      `select coalesce(sum(delta),0)::int as used from points_ledger
+       where user_id = $1 and delta > 0 and created_at::date = current_date`,
+      [userId]
+    );
+    const used: number = usedRes.rows[0].used;
+    const remaining = Math.max(0, config.dailyXpCap - used);
+    grant = Math.min(delta, remaining);
+  }
+  if (grant === 0) {
+    return { points: prevXp, prevLevel, level: prevLevel, leveledUp: false, delta: 0 };
+  }
+
   await db.query(
     "insert into points_ledger(user_id, delta, reason, ref_type, ref_id) values ($1,$2,$3,$4,$5)",
-    [userId, delta, reason, refType, refId]
+    [userId, grant, reason, refType, refId]
   );
   const upd = await db.query(
     "update users set points = points + $2 where id = $1 returning points",
-    [userId, delta]
+    [userId, grant]
   );
   const newXp: number = upd.rows[0].points;
-  const prevLevel = levelInfo(prevXp).level;
   const level = levelInfo(newXp).level;
-  return { points: newXp, prevLevel, level, leveledUp: level > prevLevel, delta };
+  return { points: newXp, prevLevel, level, leveledUp: level > prevLevel, delta: grant };
 }

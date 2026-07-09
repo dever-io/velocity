@@ -6,7 +6,7 @@ import jwt from "@fastify/jwt";
 import multipart from "@fastify/multipart";
 import fastifyStatic from "@fastify/static";
 import { config } from "./config.js";
-import { waitForDb, migrate } from "./db.js";
+import { waitForDb, migrate, pool } from "./db.js";
 import { authPlugin } from "./plugins/auth.js";
 import { registerRoutes } from "./routes/index.js";
 import { runSeed } from "./scripts/seed.js";
@@ -39,6 +39,20 @@ async function main() {
 
   await app.listen({ port: config.port, host: config.host });
   app.log.info(`Velocity backend on http://localhost:${config.port} (devAuth=${config.devAuth})`);
+
+  // REP-3: retire reports past their expiry (on boot, then every 5 min).
+  const expireReports = async () => {
+    try {
+      const r = await pool.query(
+        "update reports set status = 'expired' where status = 'active' and expires_at < now()"
+      );
+      if (r.rowCount) app.log.info(`[reports] expired ${r.rowCount}`);
+    } catch (err) {
+      app.log.warn({ err }, "expire reports failed");
+    }
+  };
+  await expireReports();
+  setInterval(expireReports, 5 * 60 * 1000);
 }
 
 main().catch((err) => {

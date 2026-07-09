@@ -65,7 +65,7 @@ export async function mapRoutes(app: FastifyInstance) {
               r.confirmations, r.status, r.photo_keys as "photoKeys",
               r.created_at as "createdAt", r.expires_at as "expiresAt", u.nickname as reporter
        from reports r left join users u on u.id = r.user_id
-       where r.status = 'active' and r.geom && ST_MakeEnvelope($1,$2,$3,$4,4326)`,
+       where r.status = 'active' and r.expires_at > now() and r.geom && ST_MakeEnvelope($1,$2,$3,$4,4326)`,
       [b.minLon, b.minLat, b.maxLon, b.maxLat]
     );
     return featureCollection(rows, (r) => ({

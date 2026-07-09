@@ -32,6 +32,8 @@ export const config = {
   publicBaseUrl: env("PUBLIC_BASE_URL", "http://localhost:8787"),
   appleBundleId: env("APPLE_BUNDLE_ID", "com.velocity.app"),
   googleClientId: env("GOOGLE_CLIENT_ID"),
+  dailyXpCap: parseInt(env("DAILY_XP_CAP", "500"), 10), // PTS-3 anti-abuse
+  reportTtlDays: parseInt(env("REPORT_TTL_DAYS", "14"), 10),
 };
 
 export type Config = typeof config;
