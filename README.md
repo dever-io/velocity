@@ -4,6 +4,7 @@ Gamified cycling-map app for Moscow (VeloQuest design direction). iOS SwiftUI ap
 Fastify/PostGIS backend. **Runs locally — the backend isn't hosted yet.**
 
 - Product spec: [spec.ru.md](spec.ru.md) · [spec.en.md](spec.en.md)
+- **Roadmap / what's left: [ROADMAP.md](ROADMAP.md)**
 - Design handoff (source of truth for visuals): `design-handoff/design_handoff_veloquest/`
 - Logo generation prompt: [logo-prompt.md](logo-prompt.md)
 
