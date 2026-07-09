@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<style>
+html,body{margin:0;padding:0;background:#E7E7EC;}
+*{-webkit-tap-highlight-color:transparent;box-sizing:border-box;}
+a{color:#0A62D6;text-decoration:none;font-weight:600;}a:hover{opacity:.75;}
+.velo-font{font-family:-apple-system,'SF Pro Display','Helvetica Neue',system-ui,sans-serif;}
+</style>
+</helmet>
+<div class="velo-font" style="padding:64px 72px 90px;width:max-content;min-width:100%;background:radial-gradient(120% 90% at 50% 0%,#F3F3F7 0%,#E4E4EA 60%,#DAD9E0 100%);min-height:100%;color:#111114;">
+
+  <div style="display:flex;align-items:center;gap:16px;margin-bottom:10px;">
+    <div style="width:52px;height:52px;border-radius:14px;background:linear-gradient(160deg,#0A84FF,#0056D6);display:flex;align-items:center;justify-content:center;box-shadow:0 10px 24px rgba(0,90,220,.34);">
+      <svg width="30" height="30" viewBox="0 0 54 54"><path d="M16 13 27 41 38 13" stroke="#fff" stroke-width="6.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></path><path d="M7 18h6M5 27h6" stroke="rgba(255,255,255,.55)" stroke-width="3.6" stroke-linecap="round"></path></svg>
+    </div>
+    <div style="font-size:40px;font-weight:800;letter-spacing:-1.2px;">Velocity</div>
+    <div style="align-self:flex-end;margin-bottom:6px;font-size:15px;color:#6B6B76;font-weight:600;">iOS · SwiftUI · пилот Москва</div>
+  </div>
+  <div style="font-size:17px;color:#55555F;max-width:760px;line-height:1.5;margin-bottom:8px;">Три направления дизайна для велокарты сообщества. Каждый — рабочий кликабельный прототип: онбординг, вход, карта со слоями, маршрут A→B, репорты, рисование дорожки, вклад и баллы, поездки из Health, профиль и настройки. Внутри каждого — переключатели <b>RU/EN</b> и <b>светлая/тёмная</b> тема.</div>
+  <div style="font-size:14px;color:#8A8A93;margin-bottom:44px;">Нажимайте на любой экран — прототипы полностью интерактивны. Ссылайтесь на варианты по бейджам: <a href="#1a">1a</a> · <a href="#1b">1b</a> · <a href="#1c">1c</a>.</div>
+
+  <div style="display:flex;flex-wrap:nowrap;gap:56px;align-items:flex-start;width:max-content;">
+
+    <div id="1a" style="display:flex;flex-direction:column;gap:18px;width:390px;">
+      <div style="display:flex;align-items:center;gap:11px;">
+        <div style="width:34px;height:34px;border-radius:10px;background:#111114;color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;">1a</div>
+        <div><div style="font-size:22px;font-weight:800;letter-spacing:-.4px;">Классика</div><div style="font-size:13px;color:#7A7A83;font-weight:600;">Native iOS · таб-бар</div></div>
+      </div>
+      <div style="font-size:14px;color:#55555F;line-height:1.5;min-height:66px;">Строго по Apple HIG: нижний таб-бар, крупные заголовки, системные листы. Центральная «+» открывает action sheet. Знакомо, предсказуемо, быстро в разработке — безопасная база MVP.</div>
+      <div style="border-radius:46px;overflow:hidden;box-shadow:0 40px 80px -20px rgba(20,20,40,.4),0 0 0 11px #0d0d10,0 0 0 13px #303036;">
+        <dc-import name="VeloClassic" hint-size="390px,844px"></dc-import>
+      </div>
+    </div>
+
+    <div id="1b" style="display:flex;flex-direction:column;gap:18px;width:390px;">
+      <div style="display:flex;align-items:center;gap:11px;">
+        <div style="width:34px;height:34px;border-radius:10px;background:#0A84FF;color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;">1b</div>
+        <div><div style="font-size:22px;font-weight:800;letter-spacing:-.4px;">Поток</div><div style="font-size:13px;color:#7A7A83;font-weight:600;">Map-first · жесты · тёмная</div></div>
+      </div>
+      <div style="font-size:14px;color:#55555F;line-height:1.5;min-height:66px;">Карта во весь экран, тёмная тема. Главная поверхность — шторка с детентами (тяните вверх), поиск и «рядом» внутри неё. Радиальная «+» и минимум хрома. Смелый, современный жестовый UX.</div>
+      <div style="border-radius:46px;overflow:hidden;box-shadow:0 40px 80px -20px rgba(20,20,40,.4),0 0 0 11px #0d0d10,0 0 0 13px #303036;">
+        <dc-import name="VeloFlow" hint-size="390px,844px"></dc-import>
+      </div>
+    </div>
+
+    <div id="1c" style="display:flex;flex-direction:column;gap:18px;width:390px;">
+      <div style="display:flex;align-items:center;gap:11px;">
+        <div style="width:34px;height:34px;border-radius:10px;background:linear-gradient(140deg,#7B5CFF,#FF5CA8);color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;">1c</div>
+        <div><div style="font-size:22px;font-weight:800;letter-spacing:-.4px;">Велоквест</div><div style="font-size:13px;color:#7A7A83;font-weight:600;">Геймификация · уровни · XP</div></div>
+      </div>
+      <div style="font-size:14px;color:#55555F;line-height:1.5;min-height:66px;">Стартовый экран — игровой хаб: уровень, XP, серия дней, задания дня с прогрессом и наградой, значки и рейтинг района. Приём вклада — с конфетти и повышением уровня. Максимум вовлечения.</div>
+      <div style="border-radius:46px;overflow:hidden;box-shadow:0 40px 80px -20px rgba(20,20,40,.4),0 0 0 11px #0d0d10,0 0 0 13px #303036;">
+        <dc-import name="VeloQuest" hint-size="390px,844px"></dc-import>
+      </div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

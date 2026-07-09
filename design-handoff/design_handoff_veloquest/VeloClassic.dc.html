@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<style>
+html,body{margin:0;padding:0;background:transparent;}
+*{-webkit-tap-highlight-color:transparent;}
+a{color:var(--tint);text-decoration:none;}a:hover{opacity:.8;}
+[data-vc]{
+--bg:#EFEFF4;--card:#FFFFFF;--card2:#F7F7FA;--sep:rgba(60,60,67,0.13);--hair:rgba(60,60,67,0.29);
+--tx:#000000;--tx2:rgba(60,60,67,0.6);--tx3:rgba(60,60,67,0.32);
+--tint:#007AFF;--green:#34C759;--red:#FF3B30;--orange:#FF9500;--purple:#AF52DE;--yellow:#FFCC00;--teal:#30B0C7;
+--c-prot:#2FA84F;--c-lane:#FF9500;--c-shared:#9AA0A6;--c-mtb:#AF52DE;--c-other:#30B0C7;
+--mLand:#E9E7DF;--mPark:#D3E5C4;--mWater:#AAD3F2;--mRoad:#FFFFFF;--mRoadE:#E2E0D6;--mBlock:#DFDDD2;
+--shadow:0 8px 26px rgba(0,0,0,0.16);--shadowS:0 2px 10px rgba(0,0,0,0.10);
+--appleBg:#000;--appleFg:#fff;
+--font:-apple-system,'SF Pro Text','Helvetica Neue',system-ui,sans-serif;
+}
+[data-vc][data-theme="dark"]{
+--bg:#000000;--card:#1C1C1E;--card2:#2C2C2E;--sep:rgba(84,84,88,0.4);--hair:rgba(84,84,88,0.65);
+--tx:#FFFFFF;--tx2:rgba(235,235,245,0.62);--tx3:rgba(235,235,245,0.32);
+--tint:#0A84FF;--green:#30D158;--red:#FF453A;--orange:#FF9F0A;--purple:#BF5AF2;--yellow:#FFD60A;--teal:#40C8E0;
+--c-prot:#32D74B;--c-lane:#FF9F0A;--c-shared:#8E8E93;--c-mtb:#BF5AF2;--c-other:#40C8E0;
+--mLand:#20242B;--mPark:#1F3324;--mWater:#123047;--mRoad:#3A3F47;--mRoadE:#2A2E35;--mBlock:#2B3038;
+--shadow:0 8px 26px rgba(0,0,0,0.5);--shadowS:0 2px 10px rgba(0,0,0,0.4);
+--appleBg:#fff;--appleFg:#000;
+}
+@keyframes vPulse{0%{transform:scale(.5);opacity:.5}100%{transform:scale(1.9);opacity:0}}
+@keyframes vPop{0%{transform:scale(.85);opacity:0}100%{transform:scale(1);opacity:1}}
+@keyframes vSheet{0%{transform:translateY(30px);opacity:0}100%{transform:translateY(0);opacity:1}}
+@keyframes vFade{0%{opacity:0}100%{opacity:1}}
+@keyframes vToast{0%{transform:translateY(-16px) scale(.95);opacity:0}100%{transform:translateY(0) scale(1);opacity:1}}
+@keyframes vFly{0%{transform:translate(-50%,0) scale(1);opacity:1}75%{opacity:1}100%{transform:translate(-50%,-78px) scale(.7);opacity:0}}
+@keyframes vConf{0%{transform:translate(0,0) rotate(0);opacity:1}100%{transform:translate(var(--cx),var(--cy)) rotate(var(--cr));opacity:0}}
+@keyframes vDraw{to{stroke-dashoffset:0}}
+@keyframes vSpin{to{transform:rotate(360deg)}}
+@keyframes vRing{0%{stroke-dashoffset:var(--c)}100%{stroke-dashoffset:var(--o)}}
+@keyframes vBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+</style>
+</helmet>
+<div data-vc data-theme="{{ theme }}" style="position:relative;width:390px;height:844px;overflow:hidden;background:var(--bg);font-family:var(--font);color:var(--tx);-webkit-font-smoothing:antialiased;">
+
+  <div style="position:absolute;top:12px;left:50%;transform:translateX(-50%);width:120px;height:34px;background:#000;border-radius:18px;z-index:400;"></div>
+  <div style="position:absolute;top:0;left:0;right:0;height:54px;z-index:399;display:flex;align-items:center;justify-content:space-between;padding:17px 27px 0 34px;pointer-events:none;color:{{ statusColor }};">
+    <div style="font-size:15px;font-weight:600;letter-spacing:-.2px;">9:41</div>
+    <div style="display:flex;align-items:center;gap:6px;">
+      <svg width="18" height="11" viewBox="0 0 18 11"><rect x="0" y="6.5" width="3" height="4.5" rx="1" fill="currentColor"/><rect x="5" y="4" width="3" height="7" rx="1" fill="currentColor"/><rect x="10" y="1.7" width="3" height="9.3" rx="1" fill="currentColor"/><rect x="15" y="0" width="3" height="11" rx="1" fill="currentColor" opacity=".35"/></svg>
+      <svg width="16" height="11" viewBox="0 0 17 12"><path d="M8.5 10.8 5.9 8.1a3.9 3.9 0 0 1 5.2 0z" fill="currentColor"/><path d="M3.5 5.9a7.4 7.4 0 0 1 10 0" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M1 3.3a11 11 0 0 1 15 0" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
+      <svg width="25" height="12" viewBox="0 0 26 12"><rect x=".5" y=".5" width="21.5" height="11" rx="3.3" stroke="currentColor" opacity=".4" fill="none"/><rect x="2.2" y="2.2" width="15" height="7.6" rx="1.6" fill="currentColor"/><path d="M23.8 4a2.2 2.2 0 0 1 0 4z" fill="currentColor" opacity=".4"/></svg>
+    </div>
+  </div>
+
+  <!-- ONBOARDING -->
+  <sc-if value="{{ isOb }}" hint-placeholder-val="{{ true }}">
+    <div style="position:absolute;inset:0;background:var(--bg);z-index:200;display:flex;flex-direction:column;">
+      <div style="display:flex;justify-content:flex-end;padding:60px 22px 0;"><div onClick="{{ obSkip }}" style="font-size:15px;color:var(--tx2);padding:8px;cursor:pointer;">{{ t.skip }}</div></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 34px;text-align:center;">
+        <div key="{{ obKey }}" style="animation:vPop .4s ease;display:flex;flex-direction:column;align-items:center;">
+          <div style="width:210px;height:200px;display:flex;align-items:center;justify-content:center;">{{ obArt }}</div>
+          <div style="font-size:27px;font-weight:800;letter-spacing:-.6px;margin-top:30px;line-height:1.12;">{{ obTitle }}</div>
+          <div style="font-size:16px;color:var(--tx2);margin-top:13px;line-height:1.45;">{{ obDesc }}</div>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:center;gap:7px;padding-bottom:26px;">
+        <sc-for list="{{ obDots }}" as="d" hint-placeholder-count="3"><div style="width:7px;height:7px;border-radius:4px;background:{{ d.c }};width:{{ d.w }};transition:all .3s;"></div></sc-for>
+      </div>
+      <div style="padding:0 22px 46px;"><div onClick="{{ obNext }}" style="height:52px;border-radius:14px;background:var(--tint);color:#fff;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:600;cursor:pointer;box-shadow:var(--shadowS);">{{ obBtn }}</div></div>
+    </div>
+  </sc-if>
+
+  <!-- AUTH -->
+  <sc-if value="{{ isAuth }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;inset:0;background:var(--bg);z-index:200;display:flex;flex-direction:column;align-items:center;" data-screen-label="Вход">
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+        <div style="width:92px;height:92px;border-radius:23px;background:linear-gradient(160deg,#0A84FF,#0056D6);display:flex;align-items:center;justify-content:center;box-shadow:0 16px 36px rgba(0,90,220,.4);animation:vBob 3s ease-in-out infinite;">
+          <svg width="52" height="52" viewBox="0 0 54 54"><path d="M16 13 27 41 38 13" stroke="#fff" stroke-width="6.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 18h6M5 27h6" stroke="rgba(255,255,255,.55)" stroke-width="3.6" stroke-linecap="round"/></svg>
+        </div>
+        <div style="font-size:30px;font-weight:800;letter-spacing:-.6px;margin-top:20px;">Velocity</div>
+        <div style="font-size:15px;color:var(--tx2);margin-top:7px;max-width:250px;text-align:center;line-height:1.4;">{{ t.signSub }}</div>
+      </div>
+      <div style="width:100%;padding:0 24px 44px;display:flex;flex-direction:column;gap:11px;box-sizing:border-box;">
+        <div onClick="{{ signIn }}" style="height:52px;border-radius:14px;background:var(--appleBg);color:var(--appleFg);display:flex;align-items:center;justify-content:center;gap:9px;font-size:17px;font-weight:600;cursor:pointer;">
+          <svg width="16" height="19" viewBox="0 0 17 20"><path d="M11.7 0c.1 1.1-.3 2.2-1 3-.7.9-1.8 1.5-2.8 1.4-.1-1 .4-2.1 1-2.9C9.6.7 10.7.1 11.7 0zM14 10.6c0-2 1.6-3 1.7-3-.9-1.4-2.4-1.6-2.9-1.6-1.2-.1-2.4.7-3 .7-.6 0-1.6-.7-2.6-.7-1.3 0-2.6.8-3.3 2-1.4 2.4-.4 6 1 8 .7 1 1.5 2 2.5 2s1.4-.6 2.6-.6 1.6.6 2.6.6 1.8-1 2.4-2c.8-1.1 1.1-2.2 1.1-2.3-.1 0-2.1-.8-2.1-3.1z" fill="currentColor"/></svg>{{ t.signApple }}
+        </div>
+        <div onClick="{{ signIn }}" style="height:52px;border-radius:14px;background:var(--card);border:1px solid var(--sep);color:var(--tx);display:flex;align-items:center;justify-content:center;gap:9px;font-size:17px;font-weight:600;cursor:pointer;">
+          <svg width="18" height="18" viewBox="0 0 19 19"><path d="M18.6 9.7c0-.7-.1-1.3-.2-1.9H9.5v3.6h5.1a4.4 4.4 0 0 1-1.9 2.9v2.4h3.1c1.8-1.7 2.8-4.1 2.8-7z" fill="#4285F4"/><path d="M9.5 19c2.6 0 4.7-.9 6.3-2.3l-3.1-2.4c-.9.6-2 .9-3.2.9-2.5 0-4.6-1.7-5.3-3.9H1v2.5A9.5 9.5 0 0 0 9.5 19z" fill="#34A853"/><path d="M4.2 11.3a5.7 5.7 0 0 1 0-3.6V5.2H1a9.5 9.5 0 0 0 0 8.6z" fill="#FBBC05"/><path d="M9.5 3.8c1.4 0 2.7.5 3.7 1.4L16 2.5A9.5 9.5 0 0 0 1 5.2l3.2 2.5c.7-2.2 2.8-3.9 5.3-3.9z" fill="#EA4335"/></svg>{{ t.signGoogle }}
+        </div>
+        <div style="font-size:12px;color:var(--tx3);text-align:center;line-height:1.4;margin-top:2px;">{{ t.signNote }}</div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- APP -->
+  <sc-if value="{{ isApp }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;inset:0;">
+
+      <!-- MAP TAB -->
+      <sc-if value="{{ tabMap }}" hint-placeholder-val="{{ true }}">
+        <div style="position:absolute;inset:0;" data-screen-label="Карта">
+          <svg ref="{{ setSvg }}" onPointerDown="{{ mapDown }}" onPointerMove="{{ mapMove }}" onPointerUp="{{ mapUp }}" viewBox="0 0 390 844" style="position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;user-select:none;cursor:{{ mapCursor }};">
+            <rect x="0" y="0" width="390" height="844" fill="var(--mLand)"/>
+            <ellipse cx="232" cy="500" rx="52" ry="60" fill="var(--mPark)"/><ellipse cx="322" cy="150" rx="58" ry="50" fill="var(--mPark)"/><ellipse cx="110" cy="782" rx="104" ry="72" fill="var(--mPark)"/><ellipse cx="48" cy="330" rx="46" ry="70" fill="var(--mPark)"/><ellipse cx="352" cy="590" rx="40" ry="48" fill="var(--mPark)" opacity=".7"/>
+            <path d="M26 150C92 188 152 240 166 320c12 68 66 84 68 138 2 50-58 70-54 120 6 66 102 84 136 146 20 36 28 70 34 114" stroke="var(--mWater)" stroke-width="26" fill="none" stroke-linecap="round"/>
+            <g stroke="var(--mRoadE)" stroke-width="11" fill="none" stroke-linecap="round"><ellipse cx="200" cy="432" rx="176" ry="240"/><ellipse cx="200" cy="398" rx="108" ry="132"/></g>
+            <g stroke="var(--mRoad)" stroke-width="8" fill="none" stroke-linecap="round"><ellipse cx="200" cy="432" rx="176" ry="240"/><ellipse cx="200" cy="398" rx="108" ry="132"/></g>
+            <g stroke="var(--mRoadE)" stroke-width="7" fill="none" stroke-linecap="round"><path d="M188 300C176 240 168 180 158 118L150 44M200 268 226 158 242 58M270 316 354 208M292 432 378 440M266 512 348 642M196 562 128 832M124 470 30 556M120 320 30 244"/></g>
+            <g stroke="var(--mRoad)" stroke-width="4.5" fill="none" stroke-linecap="round"><path d="M188 300C176 240 168 180 158 118L150 44M200 268 226 158 242 58M270 316 354 208M292 432 378 440M266 512 348 642M196 562 128 832M124 470 30 556M120 320 30 244"/></g>
+
+            <!-- infra segments -->
+            <sc-if value="{{ layers.infra }}" hint-placeholder-val="{{ true }}">
+              <sc-for list="{{ segs }}" as="s" hint-placeholder-count="5">
+                <path onClick="{{ s.tap }}" d="{{ s.d }}" stroke="{{ s.color }}" stroke-width="{{ s.w }}" fill="none" stroke-linecap="round" stroke-dasharray="{{ s.dash }}" style="cursor:pointer;"></path>
+              </sc-for>
+            </sc-if>
+            <!-- route -->
+            <sc-if value="{{ hasRouteLine }}" hint-placeholder-val="{{ false }}">
+              <path d="{{ routeD }}" stroke="var(--tint)" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity=".28"></path>
+              <path d="{{ routeD }}" stroke="var(--tint)" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="{{ routeLen }}" stroke-dashoffset="{{ routeLen }}" style="animation:vDraw 1.1s ease forwards;"></path>
+            </sc-if>
+            <!-- drawing -->
+            <sc-if value="{{ isDrawing }}" hint-placeholder-val="{{ false }}">
+              <path d="{{ drawD }}" stroke="var(--c-prot)" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="2 9" opacity=".95"></path>
+              <sc-for list="{{ drawPts }}" as="p" hint-placeholder-count="0"><circle onPointerDown="{{ p.grab }}" cx="{{ p.x }}" cy="{{ p.y }}" r="7" fill="var(--card)" stroke="var(--c-prot)" stroke-width="3.5" style="cursor:grab;"></circle></sc-for>
+            </sc-if>
+            <!-- POIs -->
+            <sc-if value="{{ layers.poi }}" hint-placeholder-val="{{ true }}">
+              <sc-for list="{{ pois }}" as="p" hint-placeholder-count="4"><g onClick="{{ p.tap }}" style="cursor:pointer;" transform="translate({{ p.x }} {{ p.y }})"><circle cx="0" cy="0" r="11" fill="{{ p.color }}" stroke="#fff" stroke-width="2.5"></circle><circle cx="0" cy="0" r="4" fill="#fff"></circle></g></sc-for>
+            </sc-if>
+            <!-- reports -->
+            <sc-if value="{{ layers.reports }}" hint-placeholder-val="{{ true }}">
+              <sc-for list="{{ reps }}" as="r" hint-placeholder-count="2"><g onClick="{{ r.tap }}" style="cursor:pointer;" transform="translate({{ r.x }} {{ r.y }})"><path d="M0 -12 12 9 -12 9Z" fill="{{ r.color }}" stroke="#fff" stroke-width="2.2" stroke-linejoin="round"></path><rect x="-1.3" y="-6" width="2.6" height="7" rx="1.3" fill="#fff"></rect><circle cx="0" cy="4.4" r="1.3" fill="#fff"></circle></g></sc-for>
+            </sc-if>
+            <!-- me -->
+            <g transform="translate(200 486)"><circle r="16" fill="var(--tint)" opacity=".4" style="transform-box:fill-box;transform-origin:center;animation:vPulse 2.6s ease-out infinite;"></circle><circle r="7.5" fill="var(--tint)" stroke="#fff" stroke-width="3"></circle></g>
+            <text x="9" y="836" font-size="9" fill="var(--tx2)" opacity=".8">© OpenStreetMap contributors</text>
+          </svg>
+
+          <sc-if value="{{ showMapChrome }}" hint-placeholder-val="{{ true }}">
+          <!-- search pill -->
+          <div onClick="{{ openSearch }}" style="position:absolute;top:62px;left:16px;right:70px;height:44px;background:var(--card);border-radius:13px;box-shadow:var(--shadow);display:flex;align-items:center;gap:9px;padding:0 15px;cursor:pointer;">
+            <svg width="17" height="17" viewBox="0 0 20 20" fill="none" stroke="var(--tx3)" stroke-width="2.2"><circle cx="8.5" cy="8.5" r="6"/><path d="M13 13 18 18" stroke-linecap="round"/></svg>
+            <span style="font-size:15.5px;color:var(--tx3);">{{ t.searchPh }}</span>
+          </div>
+          <div onClick="{{ openProfile }}" style="position:absolute;top:62px;right:16px;width:44px;height:44px;border-radius:22px;background:var(--card);box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;">
+            <div style="width:30px;height:30px;border-radius:15px;background:linear-gradient(150deg,#FF9500,#FF375F);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:14px;">А</div>
+          </div>
+
+          <!-- right toolbar -->
+          <div style="position:absolute;right:16px;bottom:200px;display:flex;flex-direction:column;gap:11px;">
+            <div onClick="{{ openLayers }}" style="width:46px;height:46px;border-radius:14px;background:var(--card);box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--tint);">
+              <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M12 3 3 8l9 5 9-5z"/><path d="M4 12.5 12 17l8-4.5M4 16.5 12 21l8-4.5" opacity=".55"/></svg>
+            </div>
+            <div onClick="{{ recenter }}" style="width:46px;height:46px;border-radius:14px;background:var(--card);box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--tint);">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 2v3M12 19v3M2 12h3M19 12h3" stroke-linecap="round"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/></svg>
+            </div>
+          </div>
+
+          <!-- freshness chip -->
+          <div style="position:absolute;left:16px;bottom:200px;background:var(--card);border-radius:12px;box-shadow:var(--shadow);padding:9px 13px;display:flex;align-items:center;gap:8px;">
+            <div style="width:9px;height:9px;border-radius:5px;background:var(--green);box-shadow:0 0 0 4px color-mix(in srgb,var(--green) 22%,transparent);"></div>
+            <div><div style="font-size:11px;color:var(--tx2);line-height:1;">{{ t.freshLabel }}</div><div style="font-size:13px;font-weight:700;margin-top:2px;line-height:1;">{{ t.freshVal }}</div></div>
+          </div>
+          </sc-if>
+
+          <!-- DRAW MODE overlay -->
+          <sc-if value="{{ isDrawing }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;top:60px;left:14px;right:14px;z-index:60;background:var(--card);border-radius:15px;box-shadow:var(--shadow);padding:12px 14px;display:flex;align-items:center;gap:12px;animation:vSheet .3s ease;">
+              <div style="width:40px;height:40px;border-radius:12px;background:color-mix(in srgb,var(--c-prot) 16%,transparent);color:var(--c-prot);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20v-4L15 5l4 4L8 20z"/><path d="M13 7l4 4"/></svg></div>
+              <div style="flex:1;"><div style="font-size:15px;font-weight:800;letter-spacing:-.3px;">{{ t.drawTitle }}</div><div style="font-size:12.5px;color:var(--tx2);line-height:1.3;margin-top:2px;">{{ drawHintText }}</div></div>
+              <div onClick="{{ cancelDraw }}" style="width:30px;height:30px;border-radius:15px;background:var(--card2);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--tx2);flex-shrink:0;"><svg width="14" height="14" viewBox="0 0 14 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 2 12 12M12 2 2 12"/></svg></div>
+            </div>
+            <div style="position:absolute;left:0;right:0;bottom:0;z-index:60;background:var(--card);border-top:1px solid var(--sep);padding:13px 16px calc(env(safe-area-inset-bottom) + 20px);display:flex;align-items:center;gap:9px;box-shadow:0 -2px 14px rgba(0,0,0,.08);">
+              <div onClick="{{ drawUndo }}" style="width:46px;height:46px;border-radius:13px;background:var(--card2);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--tx);"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg></div>
+              <div onClick="{{ drawClear }}" style="height:46px;padding:0 15px;border-radius:13px;background:var(--card2);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--tx2);font-size:14px;font-weight:600;">{{ t.clearL }}</div>
+              <div style="flex:1;text-align:center;"><span style="font-size:20px;font-weight:800;color:var(--c-prot);">{{ drawCount }}</span> <span style="font-size:13px;color:var(--tx2);">{{ t.ptsN }}</span></div>
+              <div onClick="{{ drawNext }}" style="height:46px;padding:0 22px;border-radius:13px;background:var(--tint);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;font-weight:600;opacity:{{ drawNextOp }};transition:opacity .2s;">{{ t.drawNext }}</div>
+            </div>
+          </sc-if>
+        </div>
+      </sc-if>
+
+      <!-- ROUTE TAB -->
+      <sc-if value="{{ tabRoute }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;inset:0;background:var(--bg);overflow:auto;" data-screen-label="Маршрут">
+          <div style="padding:60px 16px 100px;">
+            <div style="font-size:32px;font-weight:800;letter-spacing:-.8px;margin-bottom:18px;">{{ t.routeTitle }}</div>
+            <div style="background:var(--card);border-radius:16px;padding:2px 16px;margin-bottom:14px;box-shadow:var(--shadowS);">
+              <div style="display:flex;align-items:center;gap:13px;height:54px;"><div style="width:15px;height:15px;border-radius:8px;background:var(--green);border:3px solid color-mix(in srgb,var(--green) 30%,var(--card));flex-shrink:0;"></div><div style="flex:1;font-size:16px;font-weight:500;">{{ t.myLoc }}</div></div>
+              <div style="height:.5px;background:var(--sep);margin-left:29px;"></div>
+              <div style="display:flex;align-items:center;gap:13px;height:54px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="var(--red)"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7z"/><circle cx="12" cy="9" r="2.6" fill="#fff"/></svg><div style="flex:1;font-size:16px;font-weight:500;">{{ routeDest }}</div><div style="color:var(--tx3);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4v13M7 4 4 7M7 4l3 3M17 20V7M17 20l-3-3M17 20l3-3"/></svg></div></div>
+            </div>
+            <div style="background:var(--card2);border-radius:13px;padding:3px;display:flex;margin-bottom:18px;">
+              <div onClick="{{ profCityTap }}" style="flex:1;height:40px;border-radius:10px;background:{{ segCityBg }};color:{{ segCityCol }};box-shadow:{{ segCityShadow }};display:flex;align-items:center;justify-content:center;gap:7px;font-weight:600;font-size:15px;cursor:pointer;transition:all .18s;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 17.5 9 9h4l3-3M9 9 7 6H5"/></svg>{{ t.profCity }}</div>
+              <div onClick="{{ profMtbTap }}" style="flex:1;height:40px;border-radius:10px;background:{{ segMtbBg }};color:{{ segMtbCol }};box-shadow:{{ segMtbShadow }};display:flex;align-items:center;justify-content:center;gap:7px;font-weight:600;font-size:15px;cursor:pointer;transition:all .18s;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M3 18 9 7l4 6 3-4 5 9z"/></svg>{{ t.profMtb }}</div>
+            </div>
+            <sc-if value="{{ routeNotBuilt }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;flex-direction:column;align-items:center;text-align:center;padding:24px 20px 12px;">
+                <div style="width:120px;height:120px;border-radius:60px;background:var(--card2);display:flex;align-items:center;justify-content:center;margin-bottom:18px;"><svg width="58" height="58" viewBox="0 0 24 24" fill="none" stroke="var(--tint)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="18" r="3"/><circle cx="18" cy="6" r="3"/><path d="M9 18h5a3 3 0 0 0 0-6h-4a3 3 0 0 1 0-6h3"/></svg></div>
+                <div style="font-size:19px;font-weight:800;letter-spacing:-.3px;">{{ t.routeHintTitle }}</div>
+                <div style="font-size:14.5px;color:var(--tx2);margin-top:8px;line-height:1.45;max-width:280px;">{{ t.routeHintDesc }}</div>
+              </div>
+              <div onClick="{{ buildRoute }}" style="height:52px;border-radius:14px;background:var(--tint);color:#fff;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:600;cursor:pointer;margin-top:14px;box-shadow:0 8px 20px rgba(0,90,220,.32);">{{ t.build }}</div>
+            </sc-if>
+            <sc-if value="{{ routeBuilt }}" hint-placeholder-val="{{ false }}">
+              <div style="animation:vPop .3s ease;">
+                <div style="display:flex;gap:10px;margin-bottom:14px;">
+                  <div style="flex:1;background:var(--card);border-radius:14px;padding:14px 10px;text-align:center;box-shadow:var(--shadowS);"><div style="font-size:23px;font-weight:800;letter-spacing:-.5px;">8.4</div><div style="font-size:12px;color:var(--tx2);margin-top:2px;">км · {{ t.dist }}</div></div>
+                  <div style="flex:1;background:var(--card);border-radius:14px;padding:14px 10px;text-align:center;box-shadow:var(--shadowS);"><div style="font-size:23px;font-weight:800;letter-spacing:-.5px;">32</div><div style="font-size:12px;color:var(--tx2);margin-top:2px;">мин · {{ t.timeL }}</div></div>
+                  <div style="flex:1;background:var(--card);border-radius:14px;padding:14px 10px;text-align:center;box-shadow:var(--shadowS);"><div style="font-size:23px;font-weight:800;letter-spacing:-.5px;">74</div><div style="font-size:12px;color:var(--tx2);margin-top:2px;">м · {{ t.ascent }}</div></div>
+                </div>
+                <div style="background:var(--card);border-radius:14px;padding:15px;margin-bottom:14px;box-shadow:var(--shadowS);">
+                  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;"><span style="font-size:14px;font-weight:600;">{{ routeInfraPct }}% {{ t.onInfra }}</span><span style="font-size:13px;color:var(--c-prot);font-weight:700;">✓</span></div>
+                  <div style="height:8px;border-radius:4px;background:var(--card2);overflow:hidden;"><div style="height:100%;width:{{ routeInfraPct }}%;border-radius:4px;background:linear-gradient(90deg,var(--c-prot),var(--green));"></div></div>
+                </div>
+                <div style="background:var(--card);border-radius:14px;padding:15px;margin-bottom:16px;box-shadow:var(--shadowS);">
+                  <div style="font-size:12.5px;font-weight:700;color:var(--tx2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:12px;">{{ t.elevation }}</div>
+                  <svg width="100%" height="72" viewBox="0 0 320 72" preserveAspectRatio="none"><defs><linearGradient id="elg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--tint)" stop-opacity=".35"/><stop offset="1" stop-color="var(--tint)" stop-opacity="0"/></linearGradient></defs><path d="M0 58 40 50 80 54 120 34 160 40 200 20 240 30 280 14 320 22 320 72 0 72Z" fill="url(#elg)"/><path d="M0 58 40 50 80 54 120 34 160 40 200 20 240 30 280 14 320 22" fill="none" stroke="var(--tint)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <div style="display:flex;gap:10px;">
+                  <div onClick="{{ saveFav }}" style="flex:1;height:52px;border-radius:14px;background:var(--tint);color:#fff;display:flex;align-items:center;justify-content:center;gap:8px;font-size:16px;font-weight:600;cursor:pointer;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/></svg>{{ t.saveRoute }}</div>
+                  <div onClick="{{ editRoute }}" style="width:120px;height:52px;border-radius:14px;background:var(--card2);color:var(--tx);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;cursor:pointer;">{{ t.rebuild }}</div>
+                </div>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- IMPACT TAB -->
+      <sc-if value="{{ tabContrib }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;inset:0;background:var(--bg);overflow:auto;" data-screen-label="Мой вклад">
+          <div style="padding:60px 16px 100px;">
+            <div style="font-size:32px;font-weight:800;letter-spacing:-.8px;margin-bottom:18px;">{{ t.contribTitle }}</div>
+            <div style="border-radius:22px;padding:26px 20px;background:linear-gradient(155deg,#0A84FF,#0052CC);color:#fff;text-align:center;position:relative;overflow:hidden;box-shadow:0 14px 32px rgba(0,80,200,.34);margin-bottom:16px;">
+              <div style="position:relative;width:132px;height:132px;margin:0 auto;">
+                <svg width="132" height="132" viewBox="0 0 132 132" style="transform:rotate(-90deg);"><circle cx="66" cy="66" r="58" fill="none" stroke="rgba(255,255,255,.22)" stroke-width="11"/><circle cx="66" cy="66" r="58" fill="none" stroke="#fff" stroke-width="11" stroke-linecap="round" stroke-dasharray="{{ ringLen }}" stroke-dashoffset="{{ ringOff }}"/></svg>
+                <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;"><div style="font-size:12px;opacity:.85;letter-spacing:.5px;text-transform:uppercase;">{{ t.lvl }}</div><div style="font-size:44px;font-weight:800;line-height:.9;">7</div></div>
+              </div>
+              <div style="font-size:26px;font-weight:800;margin-top:16px;letter-spacing:-.4px;">1 240 <span style="font-size:15px;font-weight:600;opacity:.85;">{{ t.pts }}</span></div>
+              <div style="font-size:15px;font-weight:700;margin-top:10px;">{{ t.keeper }}</div>
+              <div style="font-size:12.5px;opacity:.85;margin-top:3px;">{{ t.rankTop }} · 60 XP {{ t.toNext }} 8</div>
+            </div>
+            <div style="display:flex;gap:10px;margin-bottom:20px;">
+              <div style="flex:1;background:var(--card);border-radius:14px;padding:15px 8px;text-align:center;box-shadow:var(--shadowS);"><div style="font-size:24px;font-weight:800;color:var(--c-prot);">8</div><div style="font-size:12px;color:var(--tx2);margin-top:2px;">{{ t.xpEdits }}</div></div>
+              <div style="flex:1;background:var(--card);border-radius:14px;padding:15px 8px;text-align:center;box-shadow:var(--shadowS);"><div style="font-size:24px;font-weight:800;color:var(--red);">21</div><div style="font-size:12px;color:var(--tx2);margin-top:2px;">{{ t.xpReports }}</div></div>
+              <div style="flex:1;background:var(--card);border-radius:14px;padding:15px 8px;text-align:center;box-shadow:var(--shadowS);"><div style="font-size:24px;font-weight:800;color:var(--tint);">46</div><div style="font-size:12px;color:var(--tx2);margin-top:2px;">{{ t.xpConf }}</div></div>
+            </div>
+            <div style="font-size:12.5px;font-weight:700;color:var(--tx2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px;">{{ t.history }}</div>
+            <div style="background:var(--card);border-radius:14px;overflow:hidden;box-shadow:var(--shadowS);">
+              <sc-for list="{{ historyRows }}" as="h" hint-placeholder-count="3"><div style="display:flex;align-items:center;gap:12px;padding:13px 15px;border-top:{{ h.bd }};"><div style="width:36px;height:36px;border-radius:10px;background:color-mix(in srgb,{{ h.color }} 15%,transparent);color:{{ h.color }};display:flex;align-items:center;justify-content:center;flex-shrink:0;">{{ h.icon }}</div><div style="flex:1;"><div style="font-size:14.5px;font-weight:500;line-height:1.2;">{{ h.label }}</div><div style="font-size:12px;color:var(--tx3);margin-top:2px;">{{ h.date }}</div></div><div style="font-size:16px;font-weight:800;color:{{ h.color }};">{{ h.delta }}</div></div></sc-for>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- PROFILE TAB -->
+      <sc-if value="{{ tabProfile }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;inset:0;background:var(--bg);overflow:auto;" data-screen-label="Профиль">
+          <div style="padding:60px 16px 100px;">
+            <div style="font-size:32px;font-weight:800;letter-spacing:-.8px;margin-bottom:18px;">{{ t.profileTitle }}</div>
+            <div onClick="{{ goContrib }}" style="display:flex;align-items:center;gap:14px;background:var(--card);border-radius:16px;padding:15px;margin-bottom:20px;box-shadow:var(--shadowS);cursor:pointer;">
+              <div style="width:60px;height:60px;border-radius:30px;background:linear-gradient(150deg,#FF9500,#FF375F);display:flex;align-items:center;justify-content:center;color:#fff;font-size:26px;font-weight:700;flex-shrink:0;">А</div>
+              <div style="flex:1;"><div style="font-size:19px;font-weight:800;letter-spacing:-.3px;">Аня В.</div><div style="display:flex;align-items:center;gap:7px;margin-top:4px;"><span style="font-size:13px;font-weight:700;color:#fff;background:var(--tint);padding:2px 9px;border-radius:9px;">{{ t.lvl }} 7</span><span style="font-size:14px;color:var(--tx2);">1 240 {{ t.pts }}</span></div></div>
+              <svg width="9" height="15" viewBox="0 0 9 15" stroke="var(--tx3)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1 8 7.5 1 14"/></svg>
+            </div>
+            <div style="background:var(--card);border-radius:14px;overflow:hidden;margin-bottom:20px;box-shadow:var(--shadowS);">
+              <sc-for list="{{ profRows1 }}" as="r" hint-placeholder-count="3"><div onClick="{{ r.tap }}" style="display:flex;align-items:center;gap:13px;padding:13px 15px;border-top:{{ r.bd }};cursor:pointer;"><div style="width:32px;height:32px;border-radius:9px;background:{{ r.bg }};color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;">{{ r.icon }}</div><span style="flex:1;font-size:16px;">{{ r.label }}</span><span style="font-size:15px;color:var(--tx3);">{{ r.value }}</span><svg width="8" height="14" viewBox="0 0 9 15" stroke="var(--tx3)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1 8 7.5 1 14"/></svg></div></sc-for>
+            </div>
+            <div style="background:var(--card);border-radius:14px;overflow:hidden;box-shadow:var(--shadowS);">
+              <sc-for list="{{ profRows2 }}" as="r" hint-placeholder-count="2"><div onClick="{{ r.tap }}" style="display:flex;align-items:center;gap:13px;padding:13px 15px;border-top:{{ r.bd }};cursor:pointer;"><div style="width:32px;height:32px;border-radius:9px;background:{{ r.bg }};color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;">{{ r.icon }}</div><span style="flex:1;font-size:16px;">{{ r.label }}</span><svg width="8" height="14" viewBox="0 0 9 15" stroke="var(--tx3)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1 8 7.5 1 14"/></svg></div></sc-for>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- TAB BAR -->
+      <sc-if value="{{ showTabs }}" hint-placeholder-val="{{ true }}">
+        <div style="position:absolute;left:0;right:0;bottom:0;height:83px;z-index:120;background:var(--card);border-top:1px solid var(--sep);display:flex;align-items:flex-start;padding-top:9px;box-shadow:0 -1px 12px rgba(0,0,0,.05);">
+          <sc-for list="{{ tabs }}" as="tb" hint-placeholder-count="5">
+            <div onClick="{{ tb.tap }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;">
+              <sc-if value="{{ tb.isPlus }}" hint-placeholder-val="{{ false }}">
+                <div style="width:52px;height:34px;margin-top:-2px;border-radius:12px;background:var(--tint);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(0,90,220,.4);"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></div>
+              </sc-if>
+              <sc-if value="{{ tb.isNav }}" hint-placeholder-val="{{ true }}">
+                <div style="color:{{ tb.color }};height:26px;display:flex;align-items:center;">{{ tb.icon }}</div>
+                <div style="font-size:10px;font-weight:600;color:{{ tb.color }};letter-spacing:-.1px;">{{ tb.label }}</div>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <!-- ACTION SHEET (+) -->
+      <sc-if value="{{ actionOpen }}" hint-placeholder-val="{{ false }}">
+        <div onClick="{{ closeAction }}" style="position:absolute;inset:0;z-index:300;background:rgba(0,0,0,.32);animation:vFade .2s ease;display:flex;flex-direction:column;justify-content:flex-end;padding:0 10px calc(env(safe-area-inset-bottom) + 12px);">
+          <div onClick="{{ stop }}" style="animation:vSheet .28s cubic-bezier(.2,.8,.2,1);margin-bottom:9px;">
+            <div style="background:var(--card2,var(--card));border-radius:15px;overflow:hidden;">
+              <div style="padding:15px;text-align:center;"><div style="font-size:13px;color:var(--tx2);line-height:1.35;">{{ t.actionTitle }}</div></div>
+              <sc-for list="{{ actions }}" as="a" hint-placeholder-count="3"><div onClick="{{ a.tap }}" style="border-top:.5px solid var(--sep);height:57px;display:flex;align-items:center;justify-content:center;gap:9px;cursor:pointer;color:{{ a.color }};"><div style="display:flex;align-items:center;">{{ a.icon }}</div><span style="font-size:18px;font-weight:500;color:var(--tx);">{{ a.label }}</span></div></sc-for>
+            </div>
+          </div>
+          <div onClick="{{ closeAction }}" style="background:var(--card);border-radius:15px;height:57px;display:flex;align-items:center;justify-content:center;cursor:pointer;"><span style="font-size:18px;font-weight:700;color:var(--tint);">{{ t.cancel }}</span></div>
+        </div>
+      </sc-if>
+
+      <!-- SEGMENT CARD -->
+      <sc-if value="{{ sheetSeg }}" hint-placeholder-val="{{ false }}">
+        <div onClick="{{ closeSheet }}" style="position:absolute;inset:0;z-index:150;background:rgba(0,0,0,.22);animation:vFade .2s ease;"></div>
+        <div onClick="{{ stop }}" style="position:absolute;left:0;right:0;bottom:0;z-index:151;background:var(--card);border-radius:22px 22px 0 0;box-shadow:var(--shadow);padding:8px 20px calc(env(safe-area-inset-bottom) + 24px);animation:vSheet .3s cubic-bezier(.2,.8,.2,1);">
+          <div style="width:38px;height:5px;border-radius:3px;background:var(--hair);margin:4px auto 16px;"></div>
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+            <div style="width:16px;height:16px;border-radius:4px;background:{{ segColor }};flex-shrink:0;"></div>
+            <div style="flex:1;font-size:20px;font-weight:800;letter-spacing:-.4px;line-height:1.1;">{{ segName }}</div>
+            <div onClick="{{ closeSheet }}" style="width:30px;height:30px;border-radius:15px;background:var(--card2);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--tx2);"><svg width="14" height="14" viewBox="0 0 14 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 2 12 12M12 2 2 12"/></svg></div>
+          </div>
+          <div style="background:var(--card2);border-radius:14px;overflow:hidden;">
+            <sc-for list="{{ segRows }}" as="r" hint-placeholder-count="4"><div style="display:flex;justify-content:space-between;align-items:center;padding:13px 15px;border-top:{{ r.bd }};"><span style="font-size:15px;color:var(--tx2);">{{ r.k }}</span><span style="font-size:15px;font-weight:600;display:flex;align-items:center;gap:7px;">{{ r.badge }}{{ r.v }}</span></div></sc-for>
+          </div>
+          <div onClick="{{ segReport }}" style="margin-top:14px;height:50px;border-radius:14px;background:var(--card2);color:var(--red);display:flex;align-items:center;justify-content:center;gap:8px;font-size:16px;font-weight:600;cursor:pointer;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3 22 20H2Z"/><path d="M12 9.5V14" stroke-linecap="round"/></svg>{{ t.reportHere }}</div>
+        </div>
+      </sc-if>
+
+      <!-- POI CARD -->
+      <sc-if value="{{ sheetPoi }}" hint-placeholder-val="{{ false }}">
+        <div onClick="{{ closeSheet }}" style="position:absolute;inset:0;z-index:150;background:rgba(0,0,0,.22);animation:vFade .2s ease;"></div>
+        <div onClick="{{ stop }}" style="position:absolute;left:0;right:0;bottom:0;z-index:151;background:var(--card);border-radius:22px 22px 0 0;box-shadow:var(--shadow);padding:8px 20px calc(env(safe-area-inset-bottom) + 24px);animation:vSheet .3s cubic-bezier(.2,.8,.2,1);">
+          <div style="width:38px;height:5px;border-radius:3px;background:var(--hair);margin:4px auto 16px;"></div>
+          <div style="display:flex;align-items:center;gap:13px;margin-bottom:15px;">
+            <div style="width:52px;height:52px;border-radius:14px;background:{{ poiColor }};display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0;box-shadow:0 5px 14px color-mix(in srgb,{{ poiColor }} 45%,transparent);">{{ poiIcon }}</div>
+            <div style="flex:1;"><div style="font-size:20px;font-weight:800;letter-spacing:-.4px;line-height:1.1;">{{ poiName }}</div><div style="font-size:14px;color:var(--tx2);margin-top:3px;">{{ poiKind }}</div></div>
+            <div onClick="{{ closeSheet }}" style="width:30px;height:30px;border-radius:15px;background:var(--card2);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--tx2);"><svg width="14" height="14" viewBox="0 0 14 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 2 12 12M12 2 2 12"/></svg></div>
+          </div>
+          <div style="height:112px;border-radius:14px;background:linear-gradient(135deg,var(--card2),color-mix(in srgb,{{ poiColor }} 14%,var(--card2)));display:flex;align-items:center;justify-content:center;color:var(--tx3);margin-bottom:14px;overflow:hidden;position:relative;">
+            <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" opacity=".55"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10" r="1.6"/><path d="M4 17 9 12l3 2.5L16 10l4 5"/></svg>
+          </div>
+          <div style="background:var(--card2);border-radius:14px;overflow:hidden;margin-bottom:14px;">
+            <div style="display:flex;justify-content:space-between;padding:12px 15px;"><span style="font-size:15px;color:var(--tx2);">{{ t.address }}</span><span style="font-size:15px;font-weight:600;">{{ t.addrVal }}</span></div>
+            <div style="display:flex;justify-content:space-between;padding:12px 15px;border-top:.5px solid var(--sep);"><span style="font-size:15px;color:var(--tx2);">{{ t.quality }}</span><span style="font-size:15px;font-weight:600;color:var(--green);">{{ t.openNow }}</span></div>
+          </div>
+          <div style="display:flex;gap:10px;">
+            <div onClick="{{ poiRoute }}" style="flex:1;height:50px;border-radius:14px;background:var(--tint);color:#fff;display:flex;align-items:center;justify-content:center;gap:8px;font-size:16px;font-weight:600;cursor:pointer;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 22 2l-9 19-2-8z"/></svg>{{ t.routeHere }}</div>
+            <div onClick="{{ poiFav }}" style="width:50px;height:50px;border-radius:14px;background:var(--card2);display:flex;align-items:center;justify-content:center;cursor:pointer;color:{{ favColor }};"><svg width="21" height="21" viewBox="0 0 24 24" fill="{{ favFill }}" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M12 3 15 9l6.5.9-4.7 4.6 1.1 6.5L12 18l-5.9 3 1.1-6.5L2.5 9.9 9 9z"/></svg></div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- REPORT CARD -->
+      <sc-if value="{{ sheetRep }}" hint-placeholder-val="{{ false }}">
+        <div onClick="{{ closeSheet }}" style="position:absolute;inset:0;z-index:150;background:rgba(0,0,0,.22);animation:vFade .2s ease;"></div>
+        <div onClick="{{ stop }}" style="position:absolute;left:0;right:0;bottom:0;z-index:151;background:var(--card);border-radius:22px 22px 0 0;box-shadow:var(--shadow);padding:8px 20px calc(env(safe-area-inset-bottom) + 24px);animation:vSheet .3s cubic-bezier(.2,.8,.2,1);">
+          <div style="width:38px;height:5px;border-radius:3px;background:var(--hair);margin:4px auto 16px;"></div>
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:13px;">
+            <div style="width:44px;height:44px;border-radius:12px;background:color-mix(in srgb,{{ repColor }} 16%,transparent);display:flex;align-items:center;justify-content:center;color:{{ repColor }};flex-shrink:0;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3 22 20H2Z"/><path d="M12 9.5V14" stroke-linecap="round"/><circle cx="12" cy="16.8" r=".6" fill="currentColor"/></svg></div>
+            <div style="flex:1;"><div style="font-size:19px;font-weight:800;letter-spacing:-.3px;line-height:1.1;">{{ repName }}</div><div style="font-size:13px;color:var(--tx2);margin-top:3px;">{{ t.reporter }} · {{ t.expiresIn }}</div></div>
+            <div onClick="{{ closeSheet }}" style="width:30px;height:30px;border-radius:15px;background:var(--card2);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--tx2);"><svg width="14" height="14" viewBox="0 0 14 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 2 12 12M12 2 2 12"/></svg></div>
+          </div>
+          <div style="font-size:15px;color:var(--tx);line-height:1.4;margin-bottom:13px;">{{ t.repComment }}</div>
+          <div style="display:flex;gap:9px;margin-bottom:15px;"><div style="flex:1;height:74px;border-radius:12px;background:var(--card2);display:flex;align-items:center;justify-content:center;color:var(--tx3);"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10" r="1.6"/><path d="M4 17 9 12l3 2.5"/></svg></div><div style="flex:1;height:74px;border-radius:12px;background:var(--card2);display:flex;align-items:center;justify-content:center;color:var(--tx3);"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10" r="1.6"/><path d="M4 17 9 12l3 2.5"/></svg></div></div>
+          <div style="display:flex;align-items:center;gap:7px;margin-bottom:14px;color:var(--tx2);font-size:13px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>{{ repConf }} {{ t.confN }}</div>
+          <div style="display:flex;gap:10px;">
+            <div onClick="{{ repConfirm }}" style="flex:1;height:50px;border-radius:14px;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;gap:7px;font-size:16px;font-weight:600;cursor:pointer;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>{{ t.confirm }}</div>
+            <div onClick="{{ repGone }}" style="flex:1;height:50px;border-radius:14px;background:var(--card2);color:var(--tx);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;cursor:pointer;">{{ t.gone }}</div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- LAYERS SHEET -->
+      <sc-if value="{{ sheetLayers }}" hint-placeholder-val="{{ false }}">
+        <div onClick="{{ closeSheet }}" style="position:absolute;inset:0;z-index:150;background:rgba(0,0,0,.22);animation:vFade .2s ease;"></div>
+        <div onClick="{{ stop }}" style="position:absolute;left:0;right:0;bottom:0;z-index:151;background:var(--card);border-radius:22px 22px 0 0;box-shadow:var(--shadow);padding:8px 20px calc(env(safe-area-inset-bottom) + 24px);animation:vSheet .3s cubic-bezier(.2,.8,.2,1);">
+          <div style="width:38px;height:5px;border-radius:3px;background:var(--hair);margin:4px auto 14px;"></div>
+          <div style="font-size:22px;font-weight:800;letter-spacing:-.5px;margin-bottom:15px;">{{ t.layersTitle }}</div>
+          <div style="background:var(--card2);border-radius:14px;overflow:hidden;margin-bottom:20px;">
+            <sc-for list="{{ layerRows }}" as="l" hint-placeholder-count="4"><div onClick="{{ l.tap }}" style="display:flex;align-items:center;gap:12px;padding:13px 15px;border-top:{{ l.bd }};cursor:pointer;"><div style="color:{{ l.ic }};display:flex;">{{ l.icon }}</div><span style="flex:1;font-size:16px;font-weight:500;">{{ l.label }}</span><div style="width:51px;height:31px;border-radius:16px;background:{{ l.trackBg }};padding:2px;transition:background .2s;"><div style="width:27px;height:27px;border-radius:14px;background:#fff;box-shadow:0 2px 5px rgba(0,0,0,.2);transform:translateX({{ l.knob }});transition:transform .2s;"></div></div></div></sc-for>
+          </div>
+          <div style="font-size:13px;font-weight:700;color:var(--tx2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px;">{{ t.legend }}</div>
+          <div style="display:flex;flex-direction:column;gap:11px;">
+            <sc-for list="{{ legendRows }}" as="g" hint-placeholder-count="5"><div style="display:flex;align-items:center;gap:11px;"><svg width="30" height="8"><line x1="1" y1="4" x2="29" y2="4" stroke="{{ g.c }}" stroke-width="5" stroke-linecap="round" stroke-dasharray="{{ g.dash }}"/></svg><span style="font-size:14.5px;">{{ g.label }}</span></div></sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- SEARCH SHEET -->
+      <sc-if value="{{ sheetSearch }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;inset:0;z-index:160;background:var(--bg);animation:vFade .2s ease;display:flex;flex-direction:column;" data-screen-label="Поиск">
+          <div style="padding:60px 16px 10px;display:flex;align-items:center;gap:11px;">
+            <div style="flex:1;height:44px;background:var(--card);border-radius:12px;display:flex;align-items:center;gap:9px;padding:0 14px;box-shadow:var(--shadowS);"><svg width="17" height="17" viewBox="0 0 20 20" fill="none" stroke="var(--tx3)" stroke-width="2.2"><circle cx="8.5" cy="8.5" r="6"/><path d="M13 13 18 18" stroke-linecap="round"/></svg><span style="font-size:15.5px;color:var(--tx3);">{{ t.searchPh }}</span><div style="width:2px;height:20px;background:var(--tint);margin-left:1px;animation:vFade 1s steps(1) infinite alternate;"></div></div>
+            <div onClick="{{ closeSheet }}" style="font-size:16px;color:var(--tint);font-weight:500;cursor:pointer;">{{ t.cancel }}</div>
+          </div>
+          <div style="padding:14px 16px 6px;font-size:13px;font-weight:700;color:var(--tx2);text-transform:uppercase;letter-spacing:.4px;">{{ t.recent }}</div>
+          <div style="margin:0 16px;background:var(--card);border-radius:14px;overflow:hidden;">
+            <sc-for list="{{ searchRows }}" as="s" hint-placeholder-count="3"><div onClick="{{ s.tap }}" style="display:flex;align-items:center;gap:12px;padding:14px 15px;border-top:{{ s.bd }};cursor:pointer;"><div style="width:32px;height:32px;border-radius:9px;background:var(--card2);display:flex;align-items:center;justify-content:center;color:var(--tx2);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20 16.5 16.5" stroke-linecap="round"/></svg></div><span style="flex:1;font-size:16px;">{{ s.label }}</span><svg width="8" height="14" viewBox="0 0 8 14" stroke="var(--tx3)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1 7 7 1 13"/></svg></div></sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- REPORT FLOW -->
+      <sc-if value="{{ reportOpen }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;inset:0;z-index:170;background:var(--bg);display:flex;flex-direction:column;animation:vFade .22s ease;" data-screen-label="Сообщить о проблеме">
+          <div style="padding:57px 16px 8px;display:flex;align-items:center;justify-content:space-between;">
+            <div onClick="{{ cancelReport }}" style="font-size:16px;color:var(--tint);cursor:pointer;">{{ t.cancel }}</div>
+            <div style="font-size:17px;font-weight:700;letter-spacing:-.3px;">{{ t.repTitle }}</div>
+            <div style="width:54px;"></div>
+          </div>
+          <div style="flex:1;overflow:auto;padding:10px 16px 14px;">
+            <div style="font-size:12.5px;font-weight:700;color:var(--tx2);text-transform:uppercase;letter-spacing:.4px;margin:6px 0 10px;">{{ t.chooseCat }}</div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:22px;">
+              <sc-for list="{{ catList }}" as="c" hint-placeholder-count="5"><div onClick="{{ c.tap }}" style="height:82px;border-radius:15px;background:var(--card);border:2px solid {{ c.border }};display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;transition:border .15s;"><div style="color:{{ c.color }};display:flex;">{{ c.icon }}</div><span style="font-size:12px;font-weight:600;text-align:center;line-height:1.1;">{{ c.label }}</span></div></sc-for>
+            </div>
+            <div style="font-size:12.5px;font-weight:700;color:var(--tx2);text-transform:uppercase;letter-spacing:.4px;margin:0 0 10px;">{{ t.commentL }}</div>
+            <div style="background:var(--card);border-radius:14px;padding:14px;min-height:64px;font-size:15px;color:var(--tx3);margin-bottom:22px;line-height:1.35;">{{ t.commentPh }}<span style="display:inline-block;width:2px;height:17px;background:var(--tint);vertical-align:-3px;margin-left:1px;animation:vFade 1s steps(1) infinite alternate;"></span></div>
+            <div style="font-size:12.5px;font-weight:700;color:var(--tx2);text-transform:uppercase;letter-spacing:.4px;margin:0 0 10px;">{{ t.photosL }}</div>
+            <div style="display:flex;gap:10px;margin-bottom:22px;">
+              <sc-for list="{{ photoThumbs }}" as="p" hint-placeholder-count="1"><div style="width:74px;height:74px;border-radius:13px;background:linear-gradient(135deg,var(--card),var(--card2));display:flex;align-items:center;justify-content:center;color:var(--tx3);animation:vPop .25s ease;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10" r="1.6"/><path d="M4 17 9 12l3 2.5L16 10l4 5"/></svg></div></sc-for>
+              <div onClick="{{ addPhoto }}" style="width:74px;height:74px;border-radius:13px;background:var(--card);border:2px dashed var(--hair);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--tint);"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 6v12M6 12h12"/></svg></div>
+            </div>
+            <div style="background:var(--card);border-radius:14px;padding:13px 15px;display:flex;align-items:center;gap:11px;">
+              <div style="width:40px;height:40px;border-radius:11px;background:color-mix(in srgb,var(--red) 15%,transparent);color:var(--red);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.3 7-12a7 7 0 1 0-14 0c0 5.7 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg></div>
+              <div style="flex:1;font-size:14px;color:var(--tx);">{{ t.locationL }}</div>
+            </div>
+          </div>
+          <div style="padding:10px 16px calc(env(safe-area-inset-bottom) + 18px);border-top:.5px solid var(--sep);background:var(--bg);">
+            <div onClick="{{ submitReport }}" style="height:52px;border-radius:14px;background:var(--red);color:#fff;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:600;cursor:pointer;">{{ t.submit }}</div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- DRAW DETAILS SHEET -->
+      <sc-if value="{{ drawDetails }}" hint-placeholder-val="{{ false }}">
+        <div onClick="{{ drawBack }}" style="position:absolute;inset:0;z-index:170;background:rgba(0,0,0,.32);animation:vFade .2s ease;"></div>
+        <div onClick="{{ stop }}" style="position:absolute;left:0;right:0;bottom:0;z-index:171;background:var(--card);border-radius:22px 22px 0 0;box-shadow:var(--shadow);padding:8px 20px calc(env(safe-area-inset-bottom) + 22px);animation:vSheet .3s cubic-bezier(.2,.8,.2,1);" data-screen-label="Детали дорожки">
+          <div style="width:38px;height:5px;border-radius:3px;background:var(--hair);margin:4px auto 14px;"></div>
+          <div style="display:flex;align-items:center;gap:11px;margin-bottom:17px;"><div onClick="{{ drawBack }}" style="width:32px;height:32px;border-radius:16px;background:var(--card2);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--tx);"><svg width="9" height="15" viewBox="0 0 9 15" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M8 1 1 7.5 8 14"/></svg></div><div style="font-size:21px;font-weight:800;letter-spacing:-.4px;">{{ t.drawTitle }}</div></div>
+          <div style="font-size:12.5px;font-weight:700;color:var(--tx2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px;">{{ t.drawKindL }}</div>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:18px;">
+            <sc-for list="{{ kindChips }}" as="k" hint-placeholder-count="5"><div onClick="{{ k.tap }}" style="height:50px;border-radius:13px;border:2px solid {{ k.border }};background:var(--card2);display:flex;align-items:center;gap:12px;padding:0 14px;cursor:pointer;transition:border .15s;"><svg width="26" height="8"><line x1="1" y1="4" x2="25" y2="4" stroke="{{ k.color }}" stroke-width="5" stroke-linecap="round" stroke-dasharray="{{ k.dash }}"/></svg><span style="flex:1;font-size:15px;font-weight:500;">{{ k.label }}</span><div style="display:{{ k.check }};color:var(--tint);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div></div></sc-for>
+          </div>
+          <div style="font-size:12.5px;font-weight:700;color:var(--tx2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px;">{{ t.drawSurfaceL }}</div>
+          <div style="display:flex;gap:8px;margin-bottom:20px;">
+            <sc-for list="{{ surfChips }}" as="s" hint-placeholder-count="4"><div onClick="{{ s.tap }}" style="flex:1;height:42px;border-radius:11px;background:{{ s.bg }};color:{{ s.col }};display:flex;align-items:center;justify-content:center;font-size:13.5px;font-weight:600;cursor:pointer;transition:all .15s;">{{ s.label }}</div></sc-for>
+          </div>
+          <div style="font-size:12.5px;color:var(--tx2);text-align:center;margin-bottom:14px;line-height:1.35;">{{ t.reviewNote }}</div>
+          <div onClick="{{ submitDraw }}" style="height:52px;border-radius:14px;background:var(--c-prot);color:#fff;display:flex;align-items:center;justify-content:center;gap:9px;font-size:17px;font-weight:600;cursor:pointer;box-shadow:0 8px 20px color-mix(in srgb,var(--c-prot) 40%,transparent);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg>{{ t.drawSubmit }}</div>
+        </div>
+      </sc-if>
+
+      <!-- PUSH: RIDES (Health) -->
+      <sc-if value="{{ pushRides }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;inset:0;z-index:180;background:var(--bg);display:flex;flex-direction:column;animation:vFade .22s ease;" data-screen-label="Поездки">
+          <div style="padding:57px 16px 8px;display:flex;align-items:center;gap:6px;border-bottom:.5px solid var(--sep);"><div onClick="{{ pop }}" style="display:flex;align-items:center;color:var(--tint);cursor:pointer;font-size:16px;"><svg width="11" height="18" viewBox="0 0 9 15" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M8 1 1 7.5 8 14"/></svg></div><div style="flex:1;text-align:center;font-size:17px;font-weight:700;margin-right:24px;">{{ t.ridesTitle }}</div></div>
+          <div style="flex:1;overflow:auto;padding:16px;">
+            <sc-if value="{{ healthOff }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;flex-direction:column;align-items:center;text-align:center;padding-top:22px;">
+                <div style="width:88px;height:88px;border-radius:22px;background:linear-gradient(150deg,#FF375F,#FF2D55);display:flex;align-items:center;justify-content:center;box-shadow:0 12px 28px rgba(255,45,85,.36);"><svg width="46" height="46" viewBox="0 0 24 24" fill="#fff"><path d="M12 21s-7-4.6-9.3-9C1 8.6 2.6 5 6 5c2 0 3.2 1.2 4 2.3C10.8 6.2 12 5 14 5c3.4 0 5 3.6 3.3 7-2.3 4.4-9.3 9-9.3 9z"/></svg></div>
+                <div style="font-size:21px;font-weight:800;letter-spacing:-.4px;margin-top:20px;">{{ t.healthTitle }}</div>
+                <div style="font-size:14.5px;color:var(--tx2);margin-top:10px;line-height:1.5;">{{ t.healthWhy }}</div>
+                <div style="display:inline-flex;align-items:center;gap:7px;margin-top:16px;background:var(--card);border-radius:11px;padding:9px 14px;box-shadow:var(--shadowS);"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><span style="font-size:13px;font-weight:600;color:var(--tx2);">{{ t.healthPriv }}</span></div>
+              </div>
+              <div onClick="{{ grantHealth }}" style="height:52px;border-radius:14px;background:var(--tint);color:#fff;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:600;cursor:pointer;margin-top:30px;">{{ t.healthConnect }}</div>
+            </sc-if>
+            <sc-if value="{{ healthOn }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:center;gap:8px;background:color-mix(in srgb,var(--green) 12%,var(--card));border-radius:12px;padding:11px 14px;margin-bottom:16px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><span style="font-size:13px;font-weight:600;color:var(--green);">{{ t.localOnly }}</span></div>
+              <sc-for list="{{ rideCards }}" as="r" hint-placeholder-count="2"><div style="background:var(--card);border-radius:16px;padding:16px;margin-bottom:13px;box-shadow:var(--shadowS);animation:vPop .3s ease;">
+                <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px;"><div style="font-size:17px;font-weight:800;letter-spacing:-.3px;">{{ r.title }}</div><div style="font-size:13px;color:var(--tx3);">{{ r.date }}</div></div>
+                <svg width="100%" height="56" viewBox="0 0 320 56" preserveAspectRatio="none" style="margin-bottom:14px;"><path d="{{ r.track }}" fill="none" stroke="var(--tint)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <div style="display:flex;justify-content:space-between;">
+                  <div style="text-align:center;flex:1;"><div style="font-size:18px;font-weight:800;">{{ r.dist }}</div><div style="font-size:11px;color:var(--tx2);">км</div></div>
+                  <div style="text-align:center;flex:1;"><div style="font-size:18px;font-weight:800;">{{ r.dur }}</div><div style="font-size:11px;color:var(--tx2);">{{ t.durationL }}</div></div>
+                  <div style="text-align:center;flex:1;"><div style="font-size:18px;font-weight:800;">{{ r.avg }}</div><div style="font-size:11px;color:var(--tx2);">{{ t.avgSpeed }}</div></div>
+                  <div style="text-align:center;flex:1;"><div style="font-size:18px;font-weight:800;color:var(--red);">{{ r.hr }}</div><div style="font-size:11px;color:var(--tx2);">{{ t.heartL }}</div></div>
+                </div>
+              </div></sc-for>
+            </sc-if>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- PUSH: SETTINGS -->
+      <sc-if value="{{ pushSettings }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;inset:0;z-index:180;background:var(--bg);display:flex;flex-direction:column;animation:vFade .22s ease;" data-screen-label="Настройки">
+          <div style="padding:57px 16px 8px;display:flex;align-items:center;gap:6px;border-bottom:.5px solid var(--sep);"><div onClick="{{ pop }}" style="display:flex;align-items:center;color:var(--tint);cursor:pointer;"><svg width="11" height="18" viewBox="0 0 9 15" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M8 1 1 7.5 8 14"/></svg></div><div style="flex:1;text-align:center;font-size:17px;font-weight:700;margin-right:24px;">{{ t.settingsTitle }}</div></div>
+          <div style="flex:1;overflow:auto;padding:18px 16px 30px;">
+            <div style="font-size:12.5px;font-weight:700;color:var(--tx2);text-transform:uppercase;letter-spacing:.4px;margin:0 4px 9px;">{{ t.language }}</div>
+            <div style="background:var(--card2);border-radius:12px;padding:3px;display:flex;margin-bottom:22px;">
+              <div onClick="{{ langRuTap }}" style="flex:1;height:40px;border-radius:10px;background:{{ langRuBg }};color:{{ langRuCol }};box-shadow:{{ langRuSh }};display:flex;align-items:center;justify-content:center;font-weight:600;font-size:15px;cursor:pointer;transition:all .18s;">Русский</div>
+              <div onClick="{{ langEnTap }}" style="flex:1;height:40px;border-radius:10px;background:{{ langEnBg }};color:{{ langEnCol }};box-shadow:{{ langEnSh }};display:flex;align-items:center;justify-content:center;font-weight:600;font-size:15px;cursor:pointer;transition:all .18s;">English</div>
+            </div>
+            <div style="font-size:12.5px;font-weight:700;color:var(--tx2);text-transform:uppercase;letter-spacing:.4px;margin:0 4px 9px;">{{ t.theme }}</div>
+            <div style="background:var(--card2);border-radius:12px;padding:3px;display:flex;margin-bottom:24px;">
+              <div onClick="{{ thLightTap }}" style="flex:1;height:40px;border-radius:10px;background:{{ thLightBg }};color:{{ thLightCol }};box-shadow:{{ thLightSh }};display:flex;align-items:center;justify-content:center;gap:7px;font-weight:600;font-size:15px;cursor:pointer;transition:all .18s;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.4 1.4M17.6 17.6 19 19M19 5l-1.4 1.4M6.4 17.6 5 19"/></svg>{{ t.themeLight }}</div>
+              <div onClick="{{ thDarkTap }}" style="flex:1;height:40px;border-radius:10px;background:{{ thDarkBg }};color:{{ thDarkCol }};box-shadow:{{ thDarkSh }};display:flex;align-items:center;justify-content:center;gap:7px;font-weight:600;font-size:15px;cursor:pointer;transition:all .18s;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>{{ t.themeDark }}</div>
+            </div>
+            <div style="background:var(--card);border-radius:14px;overflow:hidden;margin-bottom:22px;box-shadow:var(--shadowS);">
+              <sc-for list="{{ setRows }}" as="r" hint-placeholder-count="3"><div onClick="{{ r.tap }}" style="display:flex;align-items:center;gap:12px;padding:14px 15px;border-top:{{ r.bd }};cursor:pointer;"><div style="color:var(--tx2);display:flex;">{{ r.icon }}</div><span style="flex:1;font-size:16px;">{{ r.label }}</span><svg width="8" height="14" viewBox="0 0 9 15" stroke="var(--tx3)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1 8 7.5 1 14"/></svg></div></sc-for>
+            </div>
+            <div onClick="{{ deleteAcc }}" style="background:var(--card);border-radius:14px;padding:15px;text-align:center;font-size:16px;font-weight:600;color:var(--red);cursor:pointer;box-shadow:var(--shadowS);">{{ t.deleteAcc }}</div>
+            <div style="font-size:12px;color:var(--tx3);text-align:center;margin-top:14px;line-height:1.5;">{{ t.deleteWarn }}</div>
+            <div style="font-size:12px;color:var(--tx3);text-align:center;margin-top:18px;">Velocity · {{ t.versionL }} 0.1 (MVP)<br>© OpenStreetMap contributors · ODbL</div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- PUSH: GENERIC LIST -->
+      <sc-if value="{{ pushList }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;inset:0;z-index:180;background:var(--bg);display:flex;flex-direction:column;animation:vFade .22s ease;" data-screen-label="Список">
+          <div style="padding:57px 16px 8px;display:flex;align-items:center;gap:6px;border-bottom:.5px solid var(--sep);"><div onClick="{{ pop }}" style="display:flex;align-items:center;color:var(--tint);cursor:pointer;"><svg width="11" height="18" viewBox="0 0 9 15" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M8 1 1 7.5 8 14"/></svg></div><div style="flex:1;text-align:center;font-size:17px;font-weight:700;margin-right:24px;">{{ listTitle }}</div></div>
+          <div style="flex:1;overflow:auto;padding:16px;">
+            <div style="background:var(--card);border-radius:14px;overflow:hidden;box-shadow:var(--shadowS);">
+              <sc-for list="{{ listRows }}" as="r" hint-placeholder-count="3"><div style="display:flex;align-items:center;gap:12px;padding:14px 15px;border-top:{{ r.bd }};"><div style="width:38px;height:38px;border-radius:11px;background:color-mix(in srgb,{{ r.color }} 15%,transparent);color:{{ r.color }};display:flex;align-items:center;justify-content:center;flex-shrink:0;">{{ r.icon }}</div><div style="flex:1;"><div style="font-size:15.5px;font-weight:600;line-height:1.2;">{{ r.primary }}</div><div style="font-size:13px;color:var(--tx2);margin-top:2px;">{{ r.sec }}</div></div><span style="font-size:12px;font-weight:700;color:{{ r.stColor }};background:color-mix(in srgb,{{ r.stColor }} 14%,transparent);padding:4px 9px;border-radius:8px;">{{ r.status }}</span></div></sc-for>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- PUSH: ABOUT -->
+      <sc-if value="{{ pushAbout }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;inset:0;z-index:180;background:var(--bg);display:flex;flex-direction:column;animation:vFade .22s ease;" data-screen-label="О приложении">
+          <div style="padding:57px 16px 8px;display:flex;align-items:center;gap:6px;border-bottom:.5px solid var(--sep);"><div onClick="{{ pop }}" style="display:flex;align-items:center;color:var(--tint);cursor:pointer;"><svg width="11" height="18" viewBox="0 0 9 15" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M8 1 1 7.5 8 14"/></svg></div><div style="flex:1;text-align:center;font-size:17px;font-weight:700;margin-right:24px;">{{ t.about }}</div></div>
+          <div style="flex:1;overflow:auto;padding:28px 20px;display:flex;flex-direction:column;align-items:center;text-align:center;">
+            <div style="width:80px;height:80px;border-radius:20px;background:linear-gradient(160deg,#0A84FF,#0056D6);display:flex;align-items:center;justify-content:center;box-shadow:0 12px 28px rgba(0,90,220,.34);"><svg width="46" height="46" viewBox="0 0 54 54"><path d="M16 13 27 41 38 13" stroke="#fff" stroke-width="6.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 18h6M5 27h6" stroke="rgba(255,255,255,.55)" stroke-width="3.6" stroke-linecap="round"/></svg></div>
+            <div style="font-size:26px;font-weight:800;letter-spacing:-.5px;margin-top:16px;">Velocity</div>
+            <div style="font-size:14px;color:var(--tx3);margin-top:3px;">{{ t.versionL }} 0.1 (MVP)</div>
+            <div style="font-size:15px;color:var(--tx2);margin-top:16px;line-height:1.5;max-width:300px;">{{ aboutTagline }}</div>
+            <div style="background:var(--card);border-radius:14px;padding:16px;margin-top:24px;width:100%;box-sizing:border-box;text-align:left;box-shadow:var(--shadowS);">
+              <div style="font-size:13px;font-weight:700;margin-bottom:6px;">© OpenStreetMap contributors</div>
+              <div style="font-size:13px;color:var(--tx2);line-height:1.5;">{{ osmNote }}</div>
+            </div>
+            <div style="font-size:12.5px;color:var(--tx3);margin-top:18px;line-height:1.5;">{{ disclaimer }}</div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- PUSH: RULES -->
+      <sc-if value="{{ pushRules }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;inset:0;z-index:180;background:var(--bg);display:flex;flex-direction:column;animation:vFade .22s ease;" data-screen-label="Правила сообщества">
+          <div style="padding:57px 16px 8px;display:flex;align-items:center;gap:6px;border-bottom:.5px solid var(--sep);"><div onClick="{{ pop }}" style="display:flex;align-items:center;color:var(--tint);cursor:pointer;"><svg width="11" height="18" viewBox="0 0 9 15" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M8 1 1 7.5 8 14"/></svg></div><div style="flex:1;text-align:center;font-size:17px;font-weight:700;margin-right:24px;">{{ t.rulesItem }}</div></div>
+          <div style="flex:1;overflow:auto;padding:18px 16px;">
+            <div style="display:flex;flex-direction:column;gap:11px;">
+              <sc-for list="{{ rulesList }}" as="r" hint-placeholder-count="4"><div style="background:var(--card);border-radius:14px;padding:15px;display:flex;gap:13px;box-shadow:var(--shadowS);"><div style="width:34px;height:34px;border-radius:10px;background:color-mix(in srgb,var(--c-prot) 15%,transparent);color:var(--c-prot);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:800;">{{ r.n }}</div><div style="flex:1;"><div style="font-size:15px;font-weight:700;line-height:1.25;">{{ r.t }}</div><div style="font-size:13.5px;color:var(--tx2);margin-top:4px;line-height:1.45;">{{ r.d }}</div></div></div></sc-for>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <!-- global fx -->
+  <sc-if value="{{ flyShow }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;left:50%;top:{{ flyTop }}px;transform:translateX(-50%);z-index:500;animation:vFly 1.1s ease forwards;pointer-events:none;"><div style="background:var(--green);color:#fff;font-weight:800;font-size:20px;padding:7px 16px;border-radius:16px;box-shadow:var(--shadow);">{{ flyText }}</div></div>
+  </sc-if>
+  <sc-if value="{{ confShow }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;left:0;right:0;top:0;height:100%;z-index:499;pointer-events:none;overflow:hidden;"><div style="position:absolute;left:50%;top:38%;">{{ confetti }}</div></div>
+  </sc-if>
+  <sc-for list="{{ toasts }}" as="to" hint-placeholder-count="0">
+    <div style="position:absolute;left:16px;right:16px;top:{{ to.top }}px;z-index:510;animation:vToast .3s ease;pointer-events:none;"><div style="background:{{ to.bg }};color:#fff;border-radius:14px;padding:12px 16px;display:flex;align-items:center;gap:11px;box-shadow:var(--shadow);"><div style="flex-shrink:0;display:flex;">{{ to.icon }}</div><div style="font-size:14px;font-weight:600;line-height:1.3;">{{ to.msg }}</div></div></div>
+  </sc-for>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:390,&quot;height&quot;:844},&quot;lang&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;ru&quot;,&quot;en&quot;],&quot;default&quot;:&quot;ru&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Прототип&quot;},&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;light&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Прототип&quot;}}">
+class Component extends DCLogic {
+  constructor(p){
+    super(p);
+    this.state = {
+      stage:'ob', ob:0,
+      lang: (p&&p.lang) || 'ru',
+      theme: (p&&p.theme) || 'light',
+      tab:'map',
+      layers:{infra:true,mtb:true,poi:true,reports:true},
+      action:false,
+      points:1240, level:7,
+      toasts:[], fly:null, conf:false,
+      route:{built:false,profile:'city'}, draw:null, sel:null,
+      fav:false, report:null, push:null, health:false,
+    };
+    this._id=0;
+  }
+  // ---- i18n ----
+  get L(){ return this.state.lang; }
+  get t(){
+    const ru={
+      skip:'Пропустить', next:'Далее', start:'Поехали',
+      ob1t:'Вся веломосква на одной карте', ob1d:'Защищённые дорожки, полосы и MTB-тропы — с типом покрытия и свежестью данных.',
+      ob2t:'Маршрут от А до Б для велосипеда', ob2d:'Профили «Город» и «MTB», набор высоты и доля пути по инфраструктуре.',
+      ob3t:'Держим карту свежей вместе', ob3d:'Сообщайте о проблемах и добавляйте дорожки — получайте баллы за принятый вклад.',
+      signSub:'Карта велоинфраструктуры Москвы, свежая благодаря сообществу', signApple:'Войти через Apple', signGoogle:'Войти через Google',
+      signNote:'Вход обязателен. Мы храним только идентификатор входа, никнейм и ваш вклад.',
+      searchPh:'Поиск места или адреса', freshLabel:'Данные района', freshVal:'обновлены 2 дня назад',
+      actionTitle:'Что добавить на карту?', cancel:'Отмена',
+      aReport:'Сообщить о проблеме', aDraw:'Предложить дорожку', aPoi:'Добавить точку (POI)',
+      tMap:'Карта', tRoute:'Маршрут', tContrib:'Мой вклад', tProfile:'Профиль',
+      kindNames:{prot:'Защищённая дорожка',lane:'Полоса на дороге',shared:'Пешеходно-велодорожка',mtb:'MTB-тропа',other:'Веломаршрут'},
+      surfNames:{asphalt:'Асфальт',ground:'Грунт',gravel:'Гравий',unknown:'Неизвестно'},
+      poiKinds:{workshop:'Веломастерская',parking:'Велопарковка',rental:'Прокат велосипедов',fountain:'Питьевой фонтанчик'},
+      catNames:{pothole:'Яма на дороге',glass:'Стекло / мусор',closure:'Перекрытие',hazard:'Опасность',other:'Другое'},
+      surface:'Покрытие', quality:'Состояние', source:'Источник', updated:'Обновлено',
+      srcOsm:'OpenStreetMap', srcCom:'Данные сообщества', good:'Хорошее', reportHere:'Сообщить о проблеме',
+      address:'Адрес', routeHere:'Маршрут сюда', openNow:'Открыто до 21:00', addrVal:'ул. Тимура Фрунзе, 11',
+      confirm:'Подтвердить', gone:'Уже нет', confN:'подтверждений', expiresIn:'исчезнет через 12 дней', ago2d:'2 дня назад', reporter:'Аня · 4 ч назад', repComment:'Большая яма ближе к бордюру, легко влететь колесом.',
+      layersTitle:'Слои карты', legend:'Типы инфраструктуры', lInfra:'Велоинфраструктура', lMtb:'MTB-тропы', lPoi:'Полезные места', lReports:'Сообщения',
+      searchTitle:'Поиск', recent:'Недавнее', srch1:'Парк Горького', srch2:'Воробьёвы горы', srch3:'Вело-мастерская «Спица»',
+      routeTitle:'Маршрут', from:'Откуда', to:'Куда', myLoc:'Моё местоположение', pickOnMap:'Указать на карте', dest1:'Парк Горького',
+      profCity:'Город', profMtb:'MTB', build:'Построить маршрут', rebuild:'Изменить', dist:'Расстояние', timeL:'В пути', ascent:'Набор',
+      onInfra:'по велоинфраструктуре', elevation:'Профиль высоты', saveRoute:'Сохранить в избранное', savedRoute:'Маршрут сохранён',
+      routeHintTitle:'Куда едем?', routeHintDesc:'Укажите точку на карте, найдите адрес или начните от своей геопозиции.',
+      contribTitle:'Мой вклад', lvl:'Уровень', toNext:'до уровня', xpEdits:'правки', xpReports:'сообщения', xpConf:'подтверждения',
+      history:'История начислений', keeper:'Хранитель Хамовников', rankTop:'Топ 3% райдеров района',
+      hEdit:'Дорожка на Льва Толстого принята', hReport:'Сообщение о яме подтверждено', hConf:'Подтверждение перекрытия', today:'сегодня', yst:'вчера',
+      profileTitle:'Профиль', favorites:'Избранное', myReports:'Мои сообщения', myEdits:'Мои правки', ridesItem:'Поездки', settingsItem:'Настройки', pts:'баллов',
+      favHome:'Дом → Работа', favPark:'Парк Горького', edat:'изменить',
+      ridesTitle:'Поездки', healthTitle:'Импорт из Apple Health', healthWhy:'Читаем велотренировки, чтобы показать трек, скорость и пульс. Данные остаются только на вашем устройстве и не отправляются на сервер.', healthConnect:'Разрешить доступ к Health', healthPriv:'Только чтение · Локально',
+      importSel:'Импортировать', avgSpeed:'Средняя', maxSpeed:'Макс.', durationL:'Время', heartL:'Ср. пульс', localOnly:'Хранится только на устройстве', ride1:'Утренний заезд', ride2:'Катание в парке',
+      settingsTitle:'Настройки', language:'Язык', theme:'Оформление', themeLight:'Светлое', themeDark:'Тёмное', about:'О приложении', privacyItem:'Политика конфиденциальности', rulesItem:'Правила сообщества', deleteAcc:'Удалить аккаунт', versionL:'Версия', done:'Готово', deleteWarn:'Правки и сообщения останутся на карте, но будут отвязаны от вас.',
+      repTitle:'Проблема на карте', chooseCat:'Что случилось?', commentL:'Комментарий', commentPh:'Опишите подробнее (необязательно)', photosL:'Фото · до 3', locationL:'Место — по вашей геопозиции', submit:'Отправить', repSuccess:'Спасибо! +10 баллов после модерации',
+      drawTitle:'Новая дорожка', drawHint:'Нажимайте на карту, чтобы поставить точки линии', drawHint2:'Перетаскивайте точки, чтобы уточнить', ptsN:'точек', undo:'Отменить', clearL:'Очистить', drawNext:'Далее', drawBack:'Назад', drawKindL:'Тип дорожки', drawSurfaceL:'Покрытие', drawPhotoL:'Фото (необязательно)', drawSubmit:'На модерацию', drawSuccess:'Дорожка отправлена! +50 баллов после проверки', levelUp:'Новый уровень!', reviewNote:'Появится на карте как «данные сообщества» после проверки',
+    };
+    const en={
+      skip:'Skip', next:'Next', start:"Let's ride",
+      ob1t:'All of cycling Moscow on one map', ob1d:'Protected paths, lanes and MTB trails — with surface type and data freshness.',
+      ob2t:'A→B routing built for bikes', ob2d:'“City” and “MTB” profiles, elevation gain and share of the ride on infrastructure.',
+      ob3t:'We keep the map fresh together', ob3d:'Report problems and add lanes — earn points for accepted contributions.',
+      signSub:"Moscow's cycling map, kept fresh by the community", signApple:'Sign in with Apple', signGoogle:'Sign in with Google',
+      signNote:'Sign-in is required. We store only your sign-in id, nickname and contributions.',
+      searchPh:'Search place or address', freshLabel:'District data', freshVal:'updated 2 days ago',
+      actionTitle:'What would you like to add?', cancel:'Cancel',
+      aReport:'Report a problem', aDraw:'Suggest a bike lane', aPoi:'Add a place (POI)',
+      tMap:'Map', tRoute:'Route', tContrib:'My impact', tProfile:'Profile',
+      kindNames:{prot:'Protected bike path',lane:'Painted lane on road',shared:'Shared with pedestrians',mtb:'MTB trail',other:'Bike route'},
+      surfNames:{asphalt:'Asphalt',ground:'Ground',gravel:'Gravel',unknown:'Unknown'},
+      poiKinds:{workshop:'Repair shop',parking:'Bike parking',rental:'Bike rental',fountain:'Drinking fountain'},
+      catNames:{pothole:'Pothole',glass:'Glass / debris',closure:'Road closure',hazard:'Hazard',other:'Other'},
+      surface:'Surface', quality:'Condition', source:'Source', updated:'Updated',
+      srcOsm:'OpenStreetMap', srcCom:'Community data', good:'Good', reportHere:'Report a problem',
+      address:'Address', routeHere:'Route here', openNow:'Open until 9 PM', addrVal:'11 Timura Frunze St',
+      confirm:'Confirm', gone:'Gone now', confN:'confirmations', expiresIn:'expires in 12 days', ago2d:'2 days ago', reporter:'Anya · 4 h ago', repComment:'Big pothole near the curb, easy to hit with a wheel.',
+      layersTitle:'Map layers', legend:'Infrastructure types', lInfra:'Cycling infrastructure', lMtb:'MTB trails', lPoi:'Useful places', lReports:'Reports',
+      searchTitle:'Search', recent:'Recent', srch1:'Gorky Park', srch2:'Sparrow Hills', srch3:'«Spitsa» repair shop',
+      routeTitle:'Route', from:'From', to:'To', myLoc:'My location', pickOnMap:'Pick on map', dest1:'Gorky Park',
+      profCity:'City', profMtb:'MTB', build:'Build route', rebuild:'Edit', dist:'Distance', timeL:'Time', ascent:'Ascent',
+      onInfra:'on cycling infrastructure', elevation:'Elevation profile', saveRoute:'Save to favorites', savedRoute:'Route saved',
+      routeHintTitle:'Where to?', routeHintDesc:'Pick a point on the map, search an address, or start from your location.',
+      contribTitle:'My impact', lvl:'Level', toNext:'to level', xpEdits:'edits', xpReports:'reports', xpConf:'confirms',
+      history:'Points history', keeper:'Keeper of Khamovniki', rankTop:'Top 3% of district riders',
+      hEdit:'Lane on Lva Tolstogo accepted', hReport:'Pothole report confirmed', hConf:'Confirmed a closure', today:'today', yst:'yesterday',
+      profileTitle:'Profile', favorites:'Favorites', myReports:'My reports', myEdits:'My edits', ridesItem:'Rides', settingsItem:'Settings', pts:'points',
+      favHome:'Home → Work', favPark:'Gorky Park', edat:'edit',
+      ridesTitle:'Rides', healthTitle:'Import from Apple Health', healthWhy:'We read cycling workouts to show track, speed and heart rate. Data stays only on your device and is never sent to the server.', healthConnect:'Allow Health access', healthPriv:'Read-only · Local',
+      importSel:'Import', avgSpeed:'Avg', maxSpeed:'Max', durationL:'Time', heartL:'Avg HR', localOnly:'Stored on device only', ride1:'Morning ride', ride2:'Park cruise',
+      settingsTitle:'Settings', language:'Language', theme:'Appearance', themeLight:'Light', themeDark:'Dark', about:'About', privacyItem:'Privacy policy', rulesItem:'Community rules', deleteAcc:'Delete account', versionL:'Version', done:'Done', deleteWarn:'Your edits and reports stay on the map but are unlinked from you.',
+      repTitle:'Problem on the map', chooseCat:'What happened?', commentL:'Comment', commentPh:'Describe in more detail (optional)', photosL:'Photos · up to 3', locationL:'Location — from your position', submit:'Submit', repSuccess:'Thanks! +10 points after review',
+      drawTitle:'New bike lane', drawHint:'Tap the map to place points of the line', drawHint2:'Drag points to fine-tune', ptsN:'points', undo:'Undo', clearL:'Clear', drawNext:'Next', drawBack:'Back', drawKindL:'Lane type', drawSurfaceL:'Surface', drawPhotoL:'Photo (optional)', drawSubmit:'Submit for review', drawSuccess:'Lane submitted! +50 points after review', levelUp:'Level up!', reviewNote:'Appears as “community data” after review',
+    };
+    return this.L==='ru'?ru:en;
+  }
+  // ---- helpers ----
+  ic(paths,o){ o=o||{}; return React.createElement('svg',{width:o.s||24,height:o.s||24,viewBox:'0 0 24 24',fill:o.fill||'none',stroke:o.stroke||'currentColor',strokeWidth:o.sw||1.9,strokeLinecap:'round',strokeLinejoin:'round'}, paths.map((d,i)=>React.createElement('path',{key:i,d}))); }
+  toast(msg,bg,icon){ const id=++this._id; const top=64; const to={id,msg,bg:bg||'var(--tx)',icon:icon||this.ic(['M20 6 9 17l-5-5'],{s:19,sw:2.4,stroke:'#fff'}),top}; this.setState(s=>({toasts:[...s.toasts,to]})); setTimeout(()=>this.setState(s=>({toasts:s.toasts.filter(x=>x.id!==id)})),2600); }
+  fly(text,top){ this.setState({fly:{text,top:top||300}}); setTimeout(()=>this.setState({fly:null}),1100); }
+  celebrate(pts){ this.setState({conf:true}); this.fly('+'+pts,320); setTimeout(()=>this.setState({conf:false}),1300); }
+  setSvg=(el)=>{ this._svg=el; };
+  pt(e){ const el=this._svg; if(!el) return {x:0,y:0}; const r=el.getBoundingClientRect(); return {x:Math.round((e.clientX-r.left)/r.width*390), y:Math.round((e.clientY-r.top)/r.height*844)}; }
+  // ---- onboarding ----
+  obNext=()=>{ const n=this.state.ob; if(n>=2){ this.setState({stage:'auth'}); } else this.setState({ob:n+1}); };
+  obSkip=()=>this.setState({stage:'auth'});
+  signIn=()=>this.setState({stage:'app',tab:'map'});
+  // ---- nav ----
+  go=(tab)=>this.setState({tab,action:false,sel:null});
+  openLayers=()=>this.setState({sel:{type:'layers'}});
+  openSearch=()=>this.setState({sel:{type:'search'}});
+  openProfile=()=>this.setState({tab:'profile'});
+  recenter=()=>this.toast(this.L==='ru'?'Возврат к вашему местоположению':'Recentering on you','var(--tint)',this.ic(['M12 2v3M12 19v3M2 12h3M19 12h3','M12 12'],{s:18,sw:2.2,stroke:'#fff'}));
+  openAction=()=>this.setState({action:true});
+  closeAction=()=>this.setState({action:false});
+  stop=(e)=>{ e.stopPropagation(); };
+  // segments/pois/reports selection
+  drawing(){ return this.state.draw&&this.state.draw.active; }
+  selSeg=(d)=>()=>{ if(this.drawing())return; this.setState({sel:{type:'segment',data:d},fav:false}); };
+  selPoi=(d)=>()=>{ if(this.drawing())return; this.setState({sel:{type:'poi',data:d},fav:false}); };
+  selRep=(d)=>()=>{ if(this.drawing())return; this.setState({sel:{type:'report',data:d}}); };
+  closeSheet=()=>this.setState({sel:null});
+  mapTap=(e)=>{ if(this.state.draw&&this.state.draw.active){ const p=this.pt(e); this.setState(s=>({draw:{...s.draw,pts:[...s.draw.pts,p]}})); } };
+  toggleLayer=(k)=>()=>this.setState(s=>({layers:{...s.layers,[k]:!s.layers[k]}}));
+  poiRoute=()=>{ this.setState({sel:null,tab:'route'}); };
+  poiFav=()=>{ const nv=!this.state.fav; this.setState({fav:nv}); if(nv) this.toast(this.L==='ru'?'Добавлено в избранное':'Added to favorites','var(--tint)',this.ic(['M12 3 15 9l6.5.9-4.7 4.6 1.1 6.5L12 18l-5.9 3 1.1-6.5L2.5 9.9 9 9z'],{s:18,sw:2,stroke:'#fff'})); };
+  segReport=()=>this.startReport();
+  repConfirm=()=>{ this.setState({sel:null}); this.fly('+2',360); this.toast(this.L==='ru'?'Подтверждено · +2 балла':'Confirmed · +2 points','var(--green)'); };
+  repGone=()=>{ this.setState({sel:null}); this.toast(this.L==='ru'?'Отмечено как устаревшее':'Marked as gone','var(--tx)'); };
+  searchPick=(label)=>()=>{ this.setState({sel:null}); this.toast(label,'var(--tint)',this.ic(['M12 21s7-6.3 7-12a7 7 0 1 0-14 0c0 5.7 7 12 7 12z'],{s:18,sw:2,stroke:'#fff'})); };
+  // report flow
+  startReport=()=>this.setState({report:{cat:'pothole',photos:1},action:false,sel:null,tab:'map'});
+  setCat=(c)=>()=>this.setState(s=>({report:{...s.report,cat:c}}));
+  addPhoto=()=>this.setState(s=>({report:{...s.report,photos:Math.min(3,(s.report.photos||0)+1)}}));
+  cancelReport=()=>this.setState({report:null});
+  submitReport=()=>{ this.setState({report:null}); this.celebrate(10); setTimeout(()=>this.toast(this.t.repSuccess,'var(--green)'),350); };
+  // draw flow
+  startDraw=()=>this.setState({draw:{active:true,pts:[],step:'draw',kind:'prot',surface:'asphalt'},action:false,sel:null,tab:'map'});
+  drawUndo=()=>this.setState(s=>({draw:{...s.draw,pts:s.draw.pts.slice(0,-1)}}));
+  drawClear=()=>this.setState(s=>({draw:{...s.draw,pts:[]}}));
+  drawToDetails=()=>this.setState(s=>({draw:{...s.draw,step:'details'}}));
+  drawBack=()=>this.setState(s=>({draw:{...s.draw,step:'draw'}}));
+  setDrawKind=(k)=>()=>this.setState(s=>({draw:{...s.draw,kind:k}}));
+  setDrawSurface=(k)=>()=>this.setState(s=>({draw:{...s.draw,surface:k}}));
+  cancelDraw=()=>this.setState({draw:null});
+  submitDraw=()=>{ const np=this.state.points+50; this.setState({draw:null,points:np}); this.celebrate(50); setTimeout(()=>this.toast(this.t.drawSuccess,'var(--green)'),350); };
+  // map pointer (draw)
+  mapDown=(e)=>{ this._moved=false; };
+  mapMove=(e)=>{ if(this._grab!=null){ this._moved=true; const p=this.pt(e); this.setState(s=>{ if(!s.draw)return null; const pts=s.draw.pts.slice(); pts[this._grab]=p; return {draw:{...s.draw,pts}}; }); } };
+  mapUp=(e)=>{ if(this._grab!=null){ this._grab=null; return; } const d=this.state.draw; if(d&&d.active&&d.step==='draw'&&!this._moved){ const p=this.pt(e); this.setState(s=>({draw:{...s.draw,pts:[...s.draw.pts,p]}})); } };
+  pointGrab=(i)=>(e)=>{ e.stopPropagation(); this._grab=i; this._moved=false; };
+  setLang=(l)=>()=>this.setState({lang:l});
+  setTheme=(th)=>()=>this.setState({theme:th});
+  // route
+  setProfile=(p)=>()=>this.setState(s=>({route:{...s.route,profile:p}}));
+  buildRoute=()=>this.setState(s=>({route:{...s.route,built:true,d:'M200 486C186 420 176 340 226 158L242 58'}}));
+  editRoute=()=>this.setState(s=>({route:{...s.route,built:false}}));
+  saveFav=()=>this.toast(this.t.savedRoute,'var(--tint)',this.ic(['M12 3 15 9l6.5.9-4.7 4.6 1.1 6.5L12 18l-5.9 3 1.1-6.5L2.5 9.9 9 9z'],{s:18,sw:2,stroke:'#fff'}));
+  // push nav
+  push=(name)=>()=>this.setState({push:name});
+  pop=()=>this.setState({push:null});
+  grantHealth=()=>{ this.setState({health:true}); this.toast(this.L==='ru'?'Доступ к Health разрешён':'Health access granted','var(--green)'); };
+  importRide=()=>this.toast(this.L==='ru'?'Поездка импортирована':'Ride imported','var(--tint)',this.ic(['M20 6 9 17l-5-5'],{s:19,sw:2.4,stroke:'#fff'}));
+  deleteAcc=()=>this.toast(this.L==='ru'?'Аккаунт будет удалён':'Account will be deleted','var(--red)',this.ic(['M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14'],{s:18,sw:2,stroke:'#fff'}));
+  // ---- render ----
+  segData(){ return [
+    {id:1,d:'M188 300C176 240 168 180 158 118L150 44',kind:'prot',color:'var(--c-prot)',w:5,dash:'0'},
+    {id:2,d:'M200 268 226 158 242 58',kind:'lane',color:'var(--c-lane)',w:5,dash:'0'},
+    {id:3,d:'M270 316 354 208',kind:'shared',color:'var(--c-shared)',w:5,dash:'11 9'},
+    {id:4,d:'M266 512 348 642',kind:'mtb',color:'var(--c-mtb)',w:5,dash:'3 10'},
+    {id:5,d:'M124 470 30 556',kind:'other',color:'var(--c-other)',w:5,dash:'0'},
+    {id:6,d:'M196 562 128 832',kind:'prot',color:'var(--c-prot)',w:5,dash:'0'},
+  ]; }
+  poiData(){ return [
+    {id:1,x:150,y:250,kind:'workshop',color:'var(--orange)'},
+    {id:2,x:300,y:250,kind:'parking',color:'var(--tint)'},
+    {id:3,x:250,y:600,kind:'fountain',color:'var(--teal)'},
+    {id:4,x:110,y:560,kind:'rental',color:'var(--green)'},
+  ]; }
+  repData(){ return [
+    {id:1,x:300,y:432,cat:'pothole',color:'var(--red)'},
+    {id:2,x:170,y:660,cat:'closure',color:'var(--orange)'},
+  ]; }
+  renderVals(){
+    const t=this.t, st=this.state;
+    const stage=st.stage;
+    const obArts=[
+      React.createElement('svg',{width:210,height:190,viewBox:'0 0 230 150'},[
+        React.createElement('rect',{key:'b',x:5,y:5,width:220,height:140,rx:20,fill:'var(--card)',stroke:'var(--sep)'}),
+        React.createElement('path',{key:1,d:'M30 112C60 92 80 42 120 36',stroke:'var(--c-prot)',strokeWidth:6,fill:'none',strokeLinecap:'round'}),
+        React.createElement('path',{key:2,d:'M40 36C70 62 120 72 196 64',stroke:'var(--c-lane)',strokeWidth:6,fill:'none',strokeLinecap:'round'}),
+        React.createElement('path',{key:3,d:'M118 120C150 110 180 98 202 80',stroke:'var(--c-shared)',strokeWidth:6,fill:'none',strokeLinecap:'round',strokeDasharray:'10 9'}),
+        React.createElement('circle',{key:4,cx:120,cy:36,r:9,fill:'var(--tint)',stroke:'#fff',strokeWidth:3}),
+        React.createElement('circle',{key:5,cx:202,cy:80,r:9,fill:'var(--green)',stroke:'#fff',strokeWidth:3}),
+      ]),
+      React.createElement('svg',{width:210,height:190,viewBox:'0 0 230 150'},[
+        React.createElement('rect',{key:'b',x:5,y:5,width:220,height:140,rx:20,fill:'var(--card)',stroke:'var(--sep)'}),
+        React.createElement('path',{key:1,d:'M36 102C70 94 84 58 122 52 156 46 176 38 194 32',stroke:'var(--tint)',strokeWidth:6,fill:'none',strokeLinecap:'round'}),
+        React.createElement('circle',{key:2,cx:36,cy:102,r:10,fill:'var(--green)',stroke:'#fff',strokeWidth:3}),
+        React.createElement('path',{key:3,d:'M194 12c-8 0-13 5-13 12 0 9 13 20 13 20s13-11 13-20c0-7-5-12-13-12z',fill:'var(--red)',stroke:'#fff',strokeWidth:2.5}),
+        React.createElement('path',{key:4,d:'M28 130 58 122 88 128 118 112 148 120 178 108 204 116',stroke:'var(--green)',strokeWidth:3,fill:'none',strokeLinecap:'round',opacity:.85}),
+      ]),
+      React.createElement('svg',{width:210,height:190,viewBox:'0 0 230 150'},[
+        React.createElement('rect',{key:'b',x:5,y:5,width:220,height:140,rx:20,fill:'var(--card)',stroke:'var(--sep)'}),
+        React.createElement('path',{key:1,d:'M34 110C70 102 90 78 128 72',stroke:'var(--c-prot)',strokeWidth:6,fill:'none',strokeLinecap:'round',strokeDasharray:'12 9'}),
+        React.createElement('circle',{key:2,cx:128,cy:72,r:7,fill:'var(--card)',stroke:'var(--c-prot)',strokeWidth:3}),
+        React.createElement('rect',{key:3,x:140,y:26,width:14,height:32,rx:4,fill:'var(--orange)',transform:'rotate(34 147 42)'}),
+        React.createElement('rect',{key:4,x:142,y:94,width:64,height:30,rx:15,fill:'var(--green)'}),
+        React.createElement('text',{key:5,x:174,y:114,textAnchor:'middle',fontSize:15,fontWeight:700,fill:'#fff'},'+50'),
+      ]),
+    ];
+    const obTitles=[t.ob1t,t.ob2t,t.ob3t], obDescs=[t.ob1d,t.ob2d,t.ob3d];
+    const obDots=[0,1,2].map(i=>({c:i===st.ob?'var(--tint)':'var(--tx3)',w:i===st.ob?'18px':'7px'}));
+    // tabs
+    const tabColor=(k)=> st.tab===k?'var(--tint)':'var(--tx3)';
+    const mapIcon=this.ic(['M9 4 3 7v13l6-3 6 3 6-3V4l-6 3-6-3z','M9 4v13M15 7v13'],{s:24,stroke:tabColor('map')});
+    const rteIcon=this.ic(['M6 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4z','M18 9a2 2 0 1 0 0-4 2 2 0 0 0 0 4z','M8 17h6a4 4 0 0 0 0-8h-4a3.5 3.5 0 0 1 0-7h4'],{s:24,stroke:tabColor('route')});
+    const conIcon=this.ic(['M12 15a4 4 0 1 0 0-8 4 4 0 0 0 0 8z','M12 3v2M12 19v2M3 11v0M12 11l2.2 1.4'],{s:24,stroke:tabColor('contrib')});
+    const proIcon=this.ic(['M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8z','M5 20a7 7 0 0 1 14 0'],{s:24,stroke:tabColor('profile')});
+    const tabs=[
+      {isNav:true,icon:mapIcon,label:t.tMap,color:tabColor('map'),tap:()=>this.go('map')},
+      {isNav:true,icon:rteIcon,label:t.tRoute,color:tabColor('route'),tap:()=>this.go('route')},
+      {isPlus:true,tap:this.openAction},
+      {isNav:true,icon:conIcon,label:t.tContrib,color:tabColor('contrib'),tap:()=>this.go('contrib')},
+      {isNav:true,icon:proIcon,label:t.tProfile,color:tabColor('profile'),tap:()=>this.go('profile')},
+    ];
+    // actions
+    const actions=[
+      {label:t.aReport,color:'var(--red)',icon:this.ic(['M12 3 22 20H2Z','M12 9.5V14'],{s:22,stroke:'var(--red)'}),tap:this.startReport},
+      {label:t.aDraw,color:'var(--green)',icon:this.ic(['M4 20C7 14 10 16 12 11 14 6 17 8 20 4'],{s:22,stroke:'var(--green)'}),tap:this.startDraw},
+      {label:t.aPoi,color:'var(--tint)',icon:this.ic(['M12 21s7-6.3 7-12a7 7 0 1 0-14 0c0 5.7 7 12 7 12z','M12 9v0'],{s:22,stroke:'var(--tint)'}),tap:()=>{this.closeAction();this.startDraw();}},
+    ];
+    // segs/pois/reps
+    const segs=this.segData().filter(s=>s.kind!=='mtb'||st.layers.mtb).map(s=>({...s,tap:this.selSeg(s)}));
+    const pois=this.poiData().map(p=>({...p,tap:this.selPoi(p)}));
+    const reps=this.repData().map(r=>({...r,tap:this.selRep(r)}));
+    // fx
+    const conf = st.conf ? [...Array(26)].map((_,i)=>{ const a=(i/26)*Math.PI*2; const dist=90+Math.random()*80; const cx=Math.cos(a)*dist+'px'; const cy=Math.sin(a)*dist+120+'px'; const cols=['#FF3B30','#FF9500','#FFCC00','#34C759','#0A84FF','#AF52DE']; return React.createElement('div',{key:i,style:{position:'absolute',width:9+'px',height:(6+Math.random()*8)+'px',background:cols[i%6],borderRadius:'2px','--cx':cx,'--cy':cy,'--cr':(Math.random()*720-360)+'deg',animation:'vConf '+(0.9+Math.random()*0.5)+'s ease-out forwards'}}); }) : null;
+    // ---- sheets ----
+    const sel=st.sel||{};
+    const seg=sel.type==='segment'?sel.data:null;
+    const surfByKind={prot:'asphalt',lane:'asphalt',shared:'asphalt',mtb:'ground',other:'gravel'};
+    const segRows=seg?[
+      {k:t.surface,v:t.surfNames[surfByKind[seg.kind]],bd:'none',badge:''},
+      {k:t.quality,v:t.good,bd:'.5px solid var(--sep)',badge:''},
+      {k:t.source,v:(seg.kind==='prot'?t.srcCom:t.srcOsm),bd:'.5px solid var(--sep)',badge:''},
+      {k:t.updated,v:t.ago2d,bd:'.5px solid var(--sep)',badge:''},
+    ]:[];
+    const poi=sel.type==='poi'?sel.data:null;
+    const poiNames={workshop:this.L==='ru'?'Мастерская «Спица»':'«Spitsa» workshop',parking:this.L==='ru'?'Парковка у метро':'Metro parking',fountain:this.L==='ru'?'Питьевой фонтанчик':'Drinking fountain',rental:'Velobike'};
+    const poiIcons={workshop:this.ic(['M14.5 5.5a3.5 3.5 0 0 1-4.6 4.6L4 16l-1 3 3-1 5.9-5.9a3.5 3.5 0 0 1 4.6-4.6l-2.4 2.4-1.8-1.8z'],{s:24,stroke:'#fff'}),parking:this.ic(['M7 20V5h5a4 4 0 0 1 0 8H7'],{s:24,stroke:'#fff',sw:2.4}),fountain:this.ic(['M12 21s6-5.7 6-11a6 6 0 1 0-12 0c0 5.3 6 11 6 11z','M12 8v5M9.5 10.5h5'],{s:22,stroke:'#fff'}),rental:this.ic(['M5.5 18.5a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM18.5 18.5a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM5.5 15.5 10 8h5l2 4M9 8h4'],{s:24,stroke:'#fff'})};
+    const rep=sel.type==='report'?sel.data:null;
+    // layers
+    const lIco={infra:this.ic(['M4 20C7 14 10 16 12 11 14 6 17 8 20 4'],{s:22}),mtb:this.ic(['M3 20 9 9l4 6 3-5 5 10z'],{s:22}),poi:this.ic(['M12 21s7-6.3 7-12a7 7 0 1 0-14 0c0 5.7 7 12 7 12z','M12 9v.01'],{s:21}),reports:this.ic(['M12 3 22 20H2Z','M12 9.5V14'],{s:21})};
+    const lCol={infra:'var(--c-prot)',mtb:'var(--c-mtb)',poi:'var(--tint)',reports:'var(--red)'};
+    const layerDefs=[{k:'infra',label:t.lInfra},{k:'mtb',label:t.lMtb},{k:'poi',label:t.lPoi},{k:'reports',label:t.lReports}];
+    const layerRows=layerDefs.map((d,i)=>({label:d.label,icon:lIco[d.k],ic:lCol[d.k],bd:i===0?'none':'.5px solid var(--sep)',tap:this.toggleLayer(d.k),trackBg:st.layers[d.k]?'var(--green)':'var(--hair)',knob:st.layers[d.k]?'20px':'0px'}));
+    const legendRows=[{c:'var(--c-prot)',dash:'0',label:t.kindNames.prot},{c:'var(--c-lane)',dash:'0',label:t.kindNames.lane},{c:'var(--c-shared)',dash:'8 6',label:t.kindNames.shared},{c:'var(--c-mtb)',dash:'2 7',label:t.kindNames.mtb},{c:'var(--c-other)',dash:'0',label:t.kindNames.other}];
+    const searchRows=[t.srch1,t.srch2,t.srch3].map((l,i)=>({label:l,bd:i===0?'none':'.5px solid var(--sep)',tap:this.searchPick(l)}));
+    // draw
+    const dr=st.draw;
+    const isDrawing=!!(dr&&dr.active&&dr.step==='draw');
+    const dpts=dr?dr.pts:[];
+    const drawPts=dpts.map((p,i)=>({x:p.x,y:p.y,grab:this.pointGrab(i)}));
+    const drawD=dpts.length?('M '+dpts.map(p=>p.x+' '+p.y).join(' L ')):'';
+    const showMapChrome=st.tab==='map'&&!isDrawing;
+    // report cats
+    const catIco={pothole:this.ic(['M5 16c0-4 3-6 7-6s7 2 7 6M9 10l-1-4M14 10l1-4','M4 20h16'],{s:24}),glass:this.ic(['M6 3h12l-1.5 7a4.5 4.5 0 0 1-9 0z','M12 17v4M8 21h8'],{s:22}),closure:this.ic(['M3 8h18v8H3z','M3 8l4 8M11 8l4 8M19 8l2 4'],{s:22}),hazard:this.ic(['M12 3 22 20H2Z','M12 10v4'],{s:22}),other:this.ic(['M9 9a3 3 0 1 1 4 2.8c-.8.4-1 .9-1 1.7M12 17v.01'],{s:22})};
+    const catCol={pothole:'var(--red)',glass:'var(--orange)',closure:'var(--orange)',hazard:'var(--red)',other:'var(--tx2)'};
+    const rc=st.report?st.report.cat:null;
+    const catList=['pothole','glass','closure','hazard','other'].map(k=>({label:t.catNames[k],color:catCol[k],icon:catIco[k],border:rc===k?catCol[k]:'transparent',tap:this.setCat(k)}));
+    const photoThumbs=[...Array(st.report?st.report.photos:0)].map((_,i)=>({i}));
+    // draw chips
+    const dk=dr?dr.kind:null, dsuf=dr?dr.surface:null;
+    const kColor={prot:'var(--c-prot)',lane:'var(--c-lane)',shared:'var(--c-shared)',mtb:'var(--c-mtb)',other:'var(--c-other)'};
+    const kDash={prot:'0',lane:'0',shared:'8 6',mtb:'2 7',other:'0'};
+    const kindChips=['prot','lane','shared','mtb','other'].map(k=>({label:t.kindNames[k],color:kColor[k],dash:kDash[k],border:dk===k?kColor[k]:'var(--sep)',check:dk===k?'flex':'none',tap:this.setDrawKind(k)}));
+    const surfChips=['asphalt','ground','gravel','unknown'].map(s=>({label:t.surfNames[s],bg:dsuf===s?'var(--tint)':'var(--card2)',col:dsuf===s?'#fff':'var(--tx)',tap:this.setDrawSurface(s)}));
+    // route tab
+    const rp=st.route.profile;
+    const segCityBg=rp==='city'?'var(--card)':'transparent', segCityCol=rp==='city'?'var(--tint)':'var(--tx2)', segCityShadow=rp==='city'?'var(--shadowS)':'none';
+    const segMtbBg=rp==='mtb'?'var(--card)':'transparent', segMtbCol=rp==='mtb'?'var(--c-mtb)':'var(--tx2)', segMtbShadow=rp==='mtb'?'var(--shadowS)':'none';
+    const routeInfraPct=rp==='mtb'?42:78;
+    // contrib
+    const ringLen=364, ringOff=Math.round(364*(1-0.8));
+    const bikeIco=this.ic(['M5.5 18.5a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM18.5 18.5a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM5.5 15.5 10 8h5l2 4M9 8h4'],{s:18,stroke:'#fff'});
+    const historyRows=[
+      {label:t.hEdit,date:t.today,delta:'+50',color:'var(--c-prot)',icon:this.ic(['M4 20C7 14 10 16 12 11 14 6 17 8 20 4'],{s:18}),bd:'none'},
+      {label:t.hConf,date:t.today,delta:'+2',color:'var(--tint)',icon:this.ic(['M20 6 9 17l-5-5'],{s:18,sw:2.4}),bd:'.5px solid var(--sep)'},
+      {label:t.hReport,date:t.yst,delta:'+10',color:'var(--red)',icon:this.ic(['M12 3 22 20H2Z','M12 9.5V14'],{s:17}),bd:'.5px solid var(--sep)'},
+    ];
+    // profile rows
+    const setIco=this.ic(['M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z','M18.5 12a6.5 6.5 0 0 0-.14-1.3l1.9-1.45-1.9-3.3-2.2 1a6.5 6.5 0 0 0-2.26-1.3L13.4 2h-3.8l-.3 2.35a6.5 6.5 0 0 0-2.26 1.3l-2.2-1-1.9 3.3 1.9 1.45a6.5 6.5 0 0 0 0 2.6l-1.9 1.45 1.9 3.3 2.2-1a6.5 6.5 0 0 0 2.26 1.3L9.6 22h3.8l.3-2.35a6.5 6.5 0 0 0 2.26-1.3l2.2 1 1.9-3.3-1.9-1.45c.1-.42.14-.86.14-1.3z'],{s:17,stroke:'#fff',sw:1.6});
+    const profRows1=[
+      {label:t.favorites,value:'6',bg:'var(--orange)',icon:this.ic(['M12 3 15 9l6.5.9-4.7 4.6 1.1 6.5L12 18l-5.9 3 1.1-6.5L2.5 9.9 9 9z'],{s:18,stroke:'#fff'}),bd:'none',tap:this.push('favorites')},
+      {label:t.myReports,value:'21',bg:'var(--red)',icon:this.ic(['M12 3 22 20H2Z','M12 9.5V14'],{s:17,stroke:'#fff'}),bd:'.5px solid var(--sep)',tap:this.push('reports')},
+      {label:t.myEdits,value:'8',bg:'var(--c-prot)',icon:this.ic(['M4 20C7 14 10 16 12 11 14 6 17 8 20 4'],{s:18,stroke:'#fff'}),bd:'.5px solid var(--sep)',tap:this.push('edits')},
+    ];
+    const profRows2=[
+      {label:t.ridesItem,bg:'var(--purple)',icon:bikeIco,bd:'none',tap:this.push('rides')},
+      {label:t.settingsItem,bg:'var(--tx2)',icon:setIco,bd:'.5px solid var(--sep)',tap:this.push('settings')},
+    ];
+    // settings segmented
+    const segS=(on)=>({bg:on?'var(--card)':'transparent',sh:on?'var(--shadowS)':'none'});
+    const lru=segS(this.L==='ru'), len=segS(this.L==='en'), thl=segS(st.theme==='light'), thd=segS(st.theme==='dark');
+    const setRows=[
+      {label:t.about,icon:this.ic(['M12 16v-4M12 8v.01','M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z'],{s:21}),bd:'none',tap:this.push('about')},
+      {label:t.privacyItem,icon:this.ic(['M12 3 4 6v6c0 5 3.5 7.5 8 9 4.5-1.5 8-4 8-9V6z'],{s:20}),bd:'.5px solid var(--sep)',tap:()=>this.toast(this.L==='ru'?'Откроется политика конфиденциальности':'Opens privacy policy','var(--tint)')},
+      {label:t.rulesItem,icon:this.ic(['M4 5a2 2 0 0 1 2-2h12v16H6a2 2 0 0 0-2 2z','M8 7h8M8 11h6'],{s:20}),bd:'.5px solid var(--sep)',tap:this.push('rules')},
+    ];
+    // rides
+    const rideCards=[
+      {title:t.ride1,date:this.L==='ru'?'Сегодня, 8:24':'Today, 8:24 AM',track:'M0 42 40 30 80 36 120 18 160 26 200 10 240 22 280 8 320 16',dist:'12.4',dur:this.L==='ru'?'38м':'38m',avg:'19.6',hr:'142'},
+      {title:t.ride2,date:this.L==='ru'?'Вчера, 18:10':'Yesterday, 6:10 PM',track:'M0 28 40 34 80 22 120 30 160 18 200 28 240 14 280 26 320 16',dist:'6.1',dur:this.L==='ru'?'22м':'22m',avg:'16.2',hr:'128'},
+    ];
+    // lists
+    const stL={active:this.L==='ru'?'Активно':'Active',expired:this.L==='ru'?'Истекло':'Expired',approved:this.L==='ru'?'Принято':'Approved',pending:this.L==='ru'?'Модерация':'Review'};
+    const triIco=this.ic(['M12 3 22 20H2Z','M12 9.5V14'],{s:19}), lineIco=this.ic(['M4 20C7 14 10 16 12 11 14 6 17 8 20 4'],{s:20}), pinIco=this.ic(['M12 21s7-6.3 7-12a7 7 0 1 0-14 0c0 5.7 7 12 7 12z','M12 9v.01'],{s:19}), routeIco=this.ic(['M6 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM18 9a2 2 0 1 0 0-4 2 2 0 0 0 0 4z','M8 17h6a4 4 0 0 0 0-8h-4a3.5 3.5 0 0 1 0-7h4'],{s:19});
+    const listData={
+      favorites:{title:t.favorites,rows:[
+        {primary:t.favHome,sec:'8.4 км · 78% '+t.onInfra,color:'var(--tint)',icon:routeIco,status:'',stColor:'var(--tint)'},
+        {primary:t.favPark,sec:t.poiKinds.fountain,color:'var(--teal)',icon:pinIco,status:'',stColor:'var(--teal)'},
+      ]},
+      reports:{title:t.myReports,rows:[
+        {primary:t.catNames.pothole,sec:'3 '+t.confN,color:'var(--red)',icon:triIco,status:stL.active,stColor:'var(--green)'},
+        {primary:t.catNames.closure,sec:'12 '+t.confN,color:'var(--orange)',icon:triIco,status:stL.active,stColor:'var(--green)'},
+        {primary:t.catNames.glass,sec:t.yst,color:'var(--orange)',icon:triIco,status:stL.expired,stColor:'var(--tx3)'},
+      ]},
+      edits:{title:t.myEdits,rows:[
+        {primary:this.L==='ru'?'Дорожка на Льва Толстого':'Lane on Lva Tolstogo',sec:'+50',color:'var(--c-prot)',icon:lineIco,status:stL.approved,stColor:'var(--green)'},
+        {primary:this.L==='ru'?'Полоса на Пироговской':'Lane on Pirogovskaya',sec:'—',color:'var(--c-lane)',icon:lineIco,status:stL.pending,stColor:'var(--orange)'},
+      ]},
+    };
+    const curList=listData[st.push]||{title:'',rows:[]};
+    const listRows=curList.rows.map((r,i)=>({...r,bd:i===0?'none':'.5px solid var(--sep)'}));
+    return {
+      theme:st.theme, statusColor:'var(--tx)',
+      sheetSeg:sel.type==='segment', segColor:seg?seg.color:'var(--tint)', segName:seg?t.kindNames[seg.kind]:'', segRows, segReport:this.segReport,
+      sheetPoi:sel.type==='poi', poiColor:poi?poi.color:'var(--tint)', poiName:poi?poiNames[poi.kind]:'', poiKind:poi?t.poiKinds[poi.kind]:'', poiIcon:poi?poiIcons[poi.kind]:null, favColor:st.fav?'var(--yellow)':'var(--tx3)', favFill:st.fav?'var(--yellow)':'none', poiRoute:this.poiRoute, poiFav:this.poiFav,
+      sheetRep:sel.type==='report', repColor:rep?rep.color:'var(--red)', repName:rep?t.catNames[rep.cat]:'', repConf:3, repConfirm:this.repConfirm, repGone:this.repGone,
+      sheetLayers:sel.type==='layers', layerRows, legendRows,
+      sheetSearch:sel.type==='search', searchRows, closeSheet:this.closeSheet,
+      mapCursor:isDrawing?'crosshair':'default', mapDown:this.mapDown, mapMove:this.mapMove, mapUp:this.mapUp,
+      isDrawing, drawD, drawPts, showMapChrome,
+      drawCount:dpts.length, drawHintText:dpts.length<2?t.drawHint:t.drawHint2, drawNextOp:dpts.length>=2?'1':'.4',
+      drawNext:()=>{ if(dpts.length>=2) this.drawToDetails(); }, cancelDraw:this.cancelDraw, drawUndo:this.drawUndo, drawClear:this.drawClear,
+      drawDetails:!!(dr&&dr.step==='details'), kindChips, surfChips, drawBack:this.drawBack, submitDraw:this.submitDraw,
+      reportOpen:!!st.report, catList, photoThumbs, addPhoto:this.addPhoto, submitReport:this.submitReport, cancelReport:this.cancelReport,
+      tabRoute:st.tab==='route', tabContrib:st.tab==='contrib', tabProfile:st.tab==='profile',
+      routeDest:t.dest1, routeBuilt:st.route.built, routeNotBuilt:!st.route.built, routeInfraPct,
+      segCityBg,segCityCol,segCityShadow,segMtbBg,segMtbCol,segMtbShadow,
+      profCityTap:this.setProfile('city'), profMtbTap:this.setProfile('mtb'),
+      buildRoute:this.buildRoute, editRoute:this.editRoute, saveFav:this.saveFav,
+      ringLen, ringOff, historyRows, profRows1, profRows2, goContrib:()=>this.setState({tab:'contrib'}),
+      pop:this.pop,
+      pushRides:st.push==='rides', healthOn:st.health, healthOff:!st.health, grantHealth:this.grantHealth, rideCards,
+      pushSettings:st.push==='settings', setRows, deleteAcc:this.deleteAcc,
+      langRuBg:lru.bg,langRuCol:this.L==='ru'?'var(--tint)':'var(--tx2)',langRuSh:lru.sh,langEnBg:len.bg,langEnCol:this.L==='en'?'var(--tint)':'var(--tx2)',langEnSh:len.sh,langRuTap:this.setLang('ru'),langEnTap:this.setLang('en'),
+      thLightBg:thl.bg,thLightCol:st.theme==='light'?'var(--orange)':'var(--tx2)',thLightSh:thl.sh,thDarkBg:thd.bg,thDarkCol:st.theme==='dark'?'var(--tint)':'var(--tx2)',thDarkSh:thd.sh,thLightTap:this.setTheme('light'),thDarkTap:this.setTheme('dark'),
+      pushList:['favorites','reports','edits'].includes(st.push), listTitle:curList.title, listRows,
+      pushAbout:st.push==='about', pushRules:st.push==='rules',
+      aboutTagline:this.L==='ru'?'Самая точная и свежая карта велоинфраструктуры Москвы, которую поддерживает само сообщество.':'The most accurate and fresh cycling map of Moscow, kept alive by the community itself.',
+      osmNote:this.L==='ru'?'Данные карты основаны на OpenStreetMap и распространяются по лицензии ODbL. Правки сообщества — производная база данных.':'Map data is based on OpenStreetMap under the ODbL license. Community edits form a derivative database.',
+      disclaimer:this.L==='ru'?'Маршруты носят рекомендательный характер — всегда оценивайте реальную дорожную обстановку.':'Routes are advisory — always judge the actual road conditions yourself.',
+      rulesList:(this.L==='ru'?[
+        {n:'1',t:'Правьте то, что видели сами',d:'Добавляйте дорожки и точки, в существовании которых вы уверены. Фото очень помогает модерации.'},
+        {n:'2',t:'Точная геометрия',d:'Ставьте точки по центру дорожки. Отмечайте реальный тип и покрытие.'},
+        {n:'3',t:'Репорты — про сейчас',d:'Сообщайте об актуальных проблемах. Подтверждайте чужие, если видели их лично.'},
+        {n:'4',t:'Берегите приватность',d:'Не создавайте репорты прямо у дома, если не хотите раскрывать своё местоположение.'},
+      ]:[
+        {n:'1',t:'Edit what you saw yourself',d:'Add lanes and places you are sure exist. A photo greatly helps moderation.'},
+        {n:'2',t:'Precise geometry',d:'Place points along the centre of the lane. Mark the real type and surface.'},
+        {n:'3',t:'Reports are about now',d:'Report current problems. Confirm others’ reports if you saw them in person.'},
+        {n:'4',t:'Respect privacy',d:'Avoid creating reports right at your home if you don’t want to reveal your location.'},
+      ]),
+      isOb:stage==='ob', isAuth:stage==='auth', isApp:stage==='app',
+      t,
+      obKey:'ob'+st.ob, obArt:obArts[st.ob], obTitle:obTitles[st.ob], obDesc:obDescs[st.ob],
+      obDots, obBtn: st.ob>=2? t.start : t.next, obNext:this.obNext, obSkip:this.obSkip, signIn:this.signIn,
+      tabMap:st.tab==='map', showTabs: !st.report&&!st.draw, tabs,
+      setSvg:this.setSvg,
+      layers:st.layers, segs, pois, reps,
+      hasRouteLine:!!(st.route&&st.route.built), routeD:st.route?st.route.d:'', routeLen:1400,
+      openSearch:this.openSearch, openLayers:this.openLayers, openProfile:this.openProfile, recenter:this.recenter,
+      actionOpen:st.action, actions, closeAction:this.closeAction, stop:this.stop,
+      flyShow:!!st.fly, flyText:st.fly&&st.fly.text, flyTop:st.fly?st.fly.top:300,
+      confShow:st.conf, confetti:conf,
+      toasts:st.toasts,
+    };
+  }
+}
+</script>
+</body>
+</html>

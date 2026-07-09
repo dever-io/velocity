@@ -1,0 +1,21 @@
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    container_name: velo-postgis
+    environment:
+      POSTGRES_USER: velo
+      POSTGRES_PASSWORD: velo
+      POSTGRES_DB: velo
+    ports:
+      # host 5544 -> container 5432 (5432 = local Postgres, 5433 = user's tgm-pg)
+      - "5544:5432"
+    volumes:
+      - velo_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U velo -d velo"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  velo_pgdata:
